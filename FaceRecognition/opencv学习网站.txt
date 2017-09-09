@@ -1,0 +1,36 @@
+怎样使用OpenCV进行人脸识别:http://www.cnblogs.com/guoming0000/archive/2012/09/27/2706019.html
+
+基于 OpenCV 的人脸识别(强烈推荐) :http://blog.csdn.net/u013346007/article/details/50569626（机器学习算法目录）
+
+opencv 人脸识别 （一）训练样本的处理 :http://blog.csdn.net/abcjennifer/article/details/20396869
+
+OpenCV入门指南 第一篇 安装OpenCV :http://blog.csdn.net/morewindows/article/details/8225783
+
+Win10+VS2015下配置OpenCV3.2教程:http://jingyan.baidu.com/article/4b52d702b3209afc5c774b3c.html
+
+基于OpenCV读取摄像头进行人脸检测和人脸识别:http://blog.csdn.net/chary8088/article/details/24935505（*好文章，实现了人脸比对）
+
+OpenCV&Qt学习之四——OpenCV 实现人脸检测与相关知识整理:http://www.cnblogs.com/emouse/archive/2013/04/23/3037234.html（识别人脸）
+
+如何从0学习opencv,完成类似人脸检测的毕设？:https://www.zhihu.com/question/38536019?sort=created
+
+OpenCV实践之路——人脸检测（C++/Python)：http://blog.csdn.net/xingchenbingbuyu/article/details/51105159
+
+OpenCV图片与视频的人脸检测：http://blog.csdn.net/augusdi/article/details/9012365
+
+OpenCV 3.1.0编译与添加扩展模块：http://blog.csdn.net/jia20003/article/details/54583431
+
+opencv3.0中contrib模块的添加 ：http://blog.csdn.net/streamchuanxi/article/details/51044929（测试可用）
+
+OpenCV 获取摄像头，新建窗口显示摄像头视频：http://blog.csdn.net/augusdi/article/details/8762961
+
+OpenCV实现人脸识别——EigenFace特征脸法：http://blog.csdn.net/loveliuzz/article/details/73481023(*好文章，实现了人脸比对)
+
+【OpenCV入门教程】：http://blog.csdn.net/column/details/opencv-tutorial.html（好用）
+
+图像验证码识别（九）——训练和识别：http://blog.csdn.net/ysc6688/article/details/50772422
+
+【OpenCV结构解说】：http://blog.csdn.net/maweifei/article/details/72457394
+
+_CRT_SECURE_NO_WARNINGS//需要添加到c++程序中
+
