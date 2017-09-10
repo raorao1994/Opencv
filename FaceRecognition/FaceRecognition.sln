@@ -37,13 +37,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "12ImageROI", "ImageROI\Imag
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13MultiChannelBlending", "MultiChannelBlending\MultiChannelBlending.vcxproj", "{C54159C7-ED0C-45BD-88F9-3B0CF974F5BB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ContrastAndBright", "ContrastAndBright\ContrastAndBright.vcxproj", "{40A76402-396F-4C1E-A8B7-134496FEDD2F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "14ContrastAndBright", "ContrastAndBright\ContrastAndBright.vcxproj", "{40A76402-396F-4C1E-A8B7-134496FEDD2F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Discriminate", "Discriminate\Discriminate.vcxproj", "{3E83672C-BA3B-4FBE-85B4-EFE070962BEE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateCSVFile", "CreateCSVFile\CreateCSVFile.csproj", "{991CFFD8-ABD1-464B-8D10-8AE3AF9D04F9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KnowYouFace", "KnowYouFace\KnowYouFace.vcxproj", "{B3D7C2B6-4537-4EEC-B354-68602F176A08}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "15Filtering", "Filtering\Filtering.vcxproj", "{656F6A1D-CFA0-4DAB-AF13-4F5400C6FCD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -247,6 +249,16 @@ Global
 		{B3D7C2B6-4537-4EEC-B354-68602F176A08}.Release|x64.Build.0 = Release|x64
 		{B3D7C2B6-4537-4EEC-B354-68602F176A08}.Release|x86.ActiveCfg = Release|Win32
 		{B3D7C2B6-4537-4EEC-B354-68602F176A08}.Release|x86.Build.0 = Release|Win32
+		{656F6A1D-CFA0-4DAB-AF13-4F5400C6FCD9}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{656F6A1D-CFA0-4DAB-AF13-4F5400C6FCD9}.Debug|x64.ActiveCfg = Debug|x64
+		{656F6A1D-CFA0-4DAB-AF13-4F5400C6FCD9}.Debug|x64.Build.0 = Debug|x64
+		{656F6A1D-CFA0-4DAB-AF13-4F5400C6FCD9}.Debug|x86.ActiveCfg = Debug|Win32
+		{656F6A1D-CFA0-4DAB-AF13-4F5400C6FCD9}.Debug|x86.Build.0 = Debug|Win32
+		{656F6A1D-CFA0-4DAB-AF13-4F5400C6FCD9}.Release|Any CPU.ActiveCfg = Release|Win32
+		{656F6A1D-CFA0-4DAB-AF13-4F5400C6FCD9}.Release|x64.ActiveCfg = Release|x64
+		{656F6A1D-CFA0-4DAB-AF13-4F5400C6FCD9}.Release|x64.Build.0 = Release|x64
+		{656F6A1D-CFA0-4DAB-AF13-4F5400C6FCD9}.Release|x86.ActiveCfg = Release|Win32
+		{656F6A1D-CFA0-4DAB-AF13-4F5400C6FCD9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -271,5 +283,6 @@ Global
 		{3E83672C-BA3B-4FBE-85B4-EFE070962BEE} = {9F7CD966-67AF-4770-B77D-B05F6BA59B69}
 		{991CFFD8-ABD1-464B-8D10-8AE3AF9D04F9} = {9F7CD966-67AF-4770-B77D-B05F6BA59B69}
 		{B3D7C2B6-4537-4EEC-B354-68602F176A08} = {9F7CD966-67AF-4770-B77D-B05F6BA59B69}
+		{656F6A1D-CFA0-4DAB-AF13-4F5400C6FCD9} = {814CD3FC-3712-49E3-B7E4-A053FAB0AE1B}
 	EndGlobalSection
 EndGlobal
