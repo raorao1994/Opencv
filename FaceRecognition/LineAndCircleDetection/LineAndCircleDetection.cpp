@@ -4,8 +4,17 @@
 #include "stdafx.h"
 #include <opencv2/opencv.hpp>  
 using namespace std;
-#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")  
+void test();
+int circle();
+int line();
 int main()
+{
+	//test();
+	//line(); 
+	circle();
+	return 0;
+}
+void test()
 {
 	const char *pstrWindowsSrcTitle = "Ô­Í¼";
 	const char *pstrWindowsLineName = "Ïß¶Î¼ì²â";
@@ -53,6 +62,5 @@ int main()
 	cvReleaseImage(&pGrayImage);
 	cvReleaseImage(&pCannyImage);
 	cvReleaseImage(&pColorImage);
-	return 0;
 }
 
