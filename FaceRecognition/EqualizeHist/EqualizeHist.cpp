@@ -5,6 +5,7 @@
 //图像的灰度直方图均衡化  
 #include <opencv2/opencv.hpp>  
 #include <opencv2/legacy/compat.hpp>  
+#include <opencv2\opencv_modules.hpp>
 using namespace std;
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")  
 void FillWhite(IplImage *pImage)
