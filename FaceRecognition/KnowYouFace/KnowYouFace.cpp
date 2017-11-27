@@ -127,35 +127,48 @@ int main()
 			if (faces[i].height > 0 && faces[i].width > 0)
 			{
 				//获取测试脸
-				Testface= gray(faces[i]);
+				Testface = gray(faces[i]);
 				center.x = cvRound((faces[i].x + faces[i].width*0.5)*scale);
 				center.y = cvRound((faces[i].y + faces[i].height*0.5)*scale);
 				int radius = cvRound((faces[i].width + faces[i].height)*0.25*scale);
 				CvRect rr = cvRect(center.x - radius, center.y - radius, faces[i].width * 2, faces[i].height * 2);
-				rectangle(frame, rr, color, 1, 8, 0);
-				//开始人脸比对
-				Mat face_resized;
-				//获取测试图片大小
+				rectangle(frame, rr, color, 1, 8, 0);//画矩形框
+													 //获取测试图片大小
 				int im_width = images[0].cols;
 				int im_height = images[0].rows;
-			    //将图片转为测试图片大小
-				resize(Testface, face_resized, Size(im_width, im_height), 1.0, 1.0, INTER_CUBIC);
-				int prediction= -1;//比对结果index
+				CvRect rect = cvRect(center.x - im_width / 2, center.y - im_height / 2, im_width, im_height);
+				//开始人脸比对
+				Mat face_resized(Size(im_height, im_height), CV_8UC1);
+				try
+				{
+					Mat fa(frame, rect);//cvRect(0,0, im_width, im_height)
+					cvtColor(fa, face_resized, CV_BGR2GRAY);
+					//face_resized = fa;
+				}
+				catch (const std::exception&)
+				{
+					continue;
+				}
+
+				//将图片转为测试图片大小
+				//resize(Testface, face_resized, Size(im_width, im_height), 1.0, 1.0, INTER_CUBIC);
+				imshow("识别人脸", face_resized);
+				int prediction = -1;//比对结果index
 				double confidence = 0.0;//比对匹配度
-				//人脸比对
+										//人脸比对
 				model->predict(face_resized, prediction, confidence);
 				cout << "这是第" << prediction << "个  相识度为:" << confidence << endl;
 				string text = format("%f, confidence = %f", prediction, confidence);
 				int n = prediction;
-				std::stringstream ss,ss1;
-				std::string str,str1;
+				std::stringstream ss, ss1;
+				std::string str, str1;
 				ss << n;
 				ss >> str;
 				ss1 << confidence;
 				ss1 >> str1;
-				text = str+", confidence = "+ str1;
+				text = str + ", confidence = " + str1;
 				//将文字添加到img
-				putText(frame, text, Point(center.x - faces[i].width, center.y- faces[i].height), FONT_HERSHEY_PLAIN, 1.0, CV_RGB(0, 255, 0), 2.0);
+				putText(frame, text, Point(center.x - faces[i].width, center.y - faces[i].height), FONT_HERSHEY_PLAIN, 1.0, CV_RGB(0, 255, 0), 2.0);
 			}
 		}
 		imshow("视频", frame);
