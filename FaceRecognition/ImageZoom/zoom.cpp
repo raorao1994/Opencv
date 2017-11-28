@@ -140,4 +140,14 @@ int main()
 	}
 
 	return 0;
-}
+
+	/*
+	第六个参数，int类型的interpolation，用于指定插值方式，默认为INTER_LINEAR（线性插值）。
+	可选的插值方式如下：
+	INTER_NEAREST - 最近邻插值
+	INTER_LINEAR - 线性插值（默认值）
+	INTER_AREA - 区域插值（利用像素区域关系的重采样插值）
+	INTER_CUBIC –三次样条插值（超过4×4像素邻域内的双三次插值）
+	INTER_LANCZOS4 -Lanczos插值（超过8×8像素邻域的Lanczos插值）
+	
+	*/
