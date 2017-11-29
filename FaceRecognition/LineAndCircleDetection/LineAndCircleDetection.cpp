@@ -10,8 +10,8 @@ int line();
 int main()
 {
 	//test();
-	//line(); 
-	circle();
+	line(); 
+	//circle();
 	return 0;
 }
 void test()
