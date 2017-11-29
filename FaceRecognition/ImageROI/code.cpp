@@ -49,8 +49,8 @@ bool ROI_AddImage()
 	//【1】读入图像
 	Mat srcImage1 = imread("dota_pa.jpg");
 	Mat logoImage = imread("dota_logo.jpg");
-	if (!srcImage1.data) { printf("你妹，读取srcImage1错误~！ \n"); return false; }
-	if (!logoImage.data) { printf("你妹，读取logoImage错误~！ \n"); return false; }
+	if (!srcImage1.data) { printf("读取srcImage1错误~！ \n"); return false; }
+	if (!logoImage.data) { printf("读取logoImage错误~！ \n"); return false; }
 
 	//【2】定义一个Mat类型并给其设定ROI区域
 	Mat imageROI = srcImage1(Rect(200, 250, logoImage.cols, logoImage.rows));
@@ -84,19 +84,19 @@ bool LinearBlending()
 	srcImage2 = imread("mogu.jpg");
 	srcImage3 = imread("rain.jpg");
 
-	if (!srcImage2.data) { printf("你妹，读取srcImage2错误~！ \n"); return false; }
-	if (!srcImage3.data) { printf("你妹，读取srcImage3错误~！ \n"); return false; }
+	if (!srcImage2.data) { printf("读取srcImage2错误~！ \n"); return false; }
+	if (!srcImage3.data) { printf("读取srcImage3错误~！ \n"); return false; }
 
 	//【2】进行图像混合加权操作
 	betaValue = (1.0 - alphaValue);
 	addWeighted(srcImage2, alphaValue, srcImage3, betaValue, 0.0, dstImage);
 
 	//【3】创建并显示原图窗口
-	namedWindow("<2>线性混合示例窗口【原图】 by浅墨", 1);
-	imshow("<2>线性混合示例窗口【原图】 by浅墨", srcImage2);
+	namedWindow("<2>线性混合示例窗口", 1);
+	imshow("<2>线性混合示例窗口", srcImage2);
 
-	namedWindow("<3>线性混合示例窗口【效果图】 by浅墨", 1);
-	imshow("<3>线性混合示例窗口【效果图】 by浅墨", dstImage);
+	namedWindow("<3>线性混合示例窗口", 1);
+	imshow("<3>线性混合示例窗口", dstImage);
 
 	return true;
 
@@ -114,8 +114,8 @@ bool ROI_LinearBlending()
 	Mat srcImage4 = imread("dota_pa.jpg", 1);
 	Mat logoImage = imread("dota_logo.jpg");
 
-	if (!srcImage4.data) { printf("你妹，读取srcImage4错误~！ \n"); return false; }
-	if (!logoImage.data) { printf("你妹，读取logoImage错误~！ \n"); return false; }
+	if (!srcImage4.data) { printf("读取srcImage4错误~！ \n"); return false; }
+	if (!logoImage.data) { printf("读取logoImage错误~！ \n"); return false; }
 
 	//【2】定义一个Mat类型并给其设定ROI区域
 	Mat imageROI;
@@ -128,8 +128,8 @@ bool ROI_LinearBlending()
 	addWeighted(imageROI, 0.5, logoImage, 0.3, 0., imageROI);
 
 	//【4】显示结果
-	namedWindow("<4>区域线性图像混合示例窗口 by浅墨");
-	imshow("<4>区域线性图像混合示例窗口 by浅墨", srcImage4);
+	namedWindow("<4>区域线性图像混合示例窗口");
+	imshow("<4>区域线性图像混合示例窗口", srcImage4);
 
 	return true;
 }

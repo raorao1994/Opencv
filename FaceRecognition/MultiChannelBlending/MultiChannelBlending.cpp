@@ -2,10 +2,6 @@
 //http://blog.csdn.net/poem_qianmo/article/details/21176257
 //-----------------------------------【程序说明】----------------------------------------------  
 //  程序名称:：【OpenCV入门教程之四】分离颜色通道&多通道图像混合   配套源码  
-// VS2010版   OpenCV版本：2.4.8  
-//     2014年3月13 日 Create by 浅墨  
-//  图片素材出处：dota2原画 dota2logo   
-//     浅墨的微博：@浅墨_毛星云  
 //------------------------------------------------------------------------------------------------  
 
 //-----------------------------------【头文件包含部分】---------------------------------------  
@@ -64,8 +60,8 @@ bool MultiChannelBlending()
 	logoImage = imread(path2, 0);
 	srcImage = imread(path1);
 
-	if (!logoImage.data) { printf("Oh，no，读取logoImage错误~！\n"); return false; }
-	if (!srcImage.data) { printf("Oh，no，读取srcImage错误~！\n"); return false; }
+	if (!logoImage.data) { printf("读取logoImage错误~！\n"); return false; }
+	if (!srcImage.data) { printf("读取srcImage错误~！\n"); return false; }
 
 	//【2】把一个3通道图像转换成3个单通道图像  
 	split(srcImage, channels);//分离色彩通道  
@@ -80,8 +76,8 @@ bool MultiChannelBlending()
 	merge(channels, srcImage);
 
 	//【6】显示效果图  
-	namedWindow("<1>游戏原画+logo蓝色通道 by浅墨");
-	imshow("<1>游戏原画+logo蓝色通道 by浅墨", srcImage);
+	namedWindow("<1>游戏原画+logo蓝色通道");
+	imshow("<1>游戏原画+logo蓝色通道", srcImage);
 
 
 	//=================【绿色通道部分】=================  
@@ -95,8 +91,8 @@ bool MultiChannelBlending()
 	logoImage = imread(path2, 0);
 	srcImage = imread(path1);
 
-	if (!logoImage.data) { printf("Oh，no，读取logoImage错误~！\n"); return false; }
-	if (!srcImage.data) { printf("Oh，no，读取srcImage错误~！\n"); return false; }
+	if (!logoImage.data) { printf("读取logoImage错误~！\n"); return false; }
+	if (!srcImage.data) { printf("读取srcImage错误~！\n"); return false; }
 
 	//【2】将一个三通道图像转换成三个单通道图像  
 	split(srcImage, channels);//分离色彩通道  
@@ -111,8 +107,8 @@ bool MultiChannelBlending()
 	merge(channels, srcImage);
 
 	//【6】显示效果图  
-	namedWindow("<2>游戏原画+logo绿色通道 by浅墨");
-	imshow("<2>游戏原画+logo绿色通道 by浅墨", srcImage);
+	namedWindow("<2>游戏原画+logo绿色通道");
+	imshow("<2>游戏原画+logo绿色通道", srcImage);
 
 
 
@@ -127,8 +123,8 @@ bool MultiChannelBlending()
 	logoImage = imread(path2, 0);
 	srcImage = imread(path1);
 
-	if (!logoImage.data) { printf("Oh，no，读取logoImage错误~！\n"); return false; }
-	if (!srcImage.data) { printf("Oh，no，读取srcImage错误~！\n"); return false; }
+	if (!logoImage.data) { printf("读取logoImage错误~！\n"); return false; }
+	if (!srcImage.data) { printf("读取srcImage错误~！\n"); return false; }
 
 	//【2】将一个三通道图像转换成三个单通道图像  
 	split(srcImage, channels);//分离色彩通道  
@@ -143,8 +139,8 @@ bool MultiChannelBlending()
 	merge(channels, srcImage);
 
 	//【6】显示效果图  
-	namedWindow("<3>游戏原画+logo红色通道 by浅墨");
-	imshow("<3>游戏原画+logo红色通道 by浅墨", srcImage);
+	namedWindow("<3>游戏原画+logo红色通道");
+	imshow("<3>游戏原画+logo红色通道", srcImage);
 
 	return true;
 }

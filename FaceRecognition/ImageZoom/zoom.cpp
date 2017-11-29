@@ -37,14 +37,13 @@ static void ShowHelpText();
 static void ShowHelpText()
 {
 	//输出一些帮助信息  
-	printf("\n\n\n\t欢迎来到OpenCV图像金字塔和resize示例程序~\n\n");
-	printf("\n\n\t按键操作说明: \n\n"
+	printf("欢迎来到OpenCV图像金字塔和resize示例程序~\n");
+	printf("按键操作说明: \n\n"
 		"\t\t键盘按键【ESC】或者【Q】- 退出程序\n"
 		"\t\t键盘按键【1】或者【W】- 进行基于【resize】函数的图片放大\n"
 		"\t\t键盘按键【2】或者【S】- 进行基于【resize】函数的图片缩小\n"
 		"\t\t键盘按键【3】或者【A】- 进行基于【pyrUp】函数的图片放大\n"
 		"\t\t键盘按键【4】或者【D】- 进行基于【pyrDown】函数的图片缩小\n"
-		"\n\n\t\t\t\t\t\t\t\t by浅墨\n\n\n"
 	);
 }
 

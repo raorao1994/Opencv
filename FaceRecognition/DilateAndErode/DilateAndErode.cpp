@@ -80,7 +80,7 @@ static int start1()
 	createTrackbar("内核尺寸", "【效果图】", &g_nStructElementSize, 21, on_ElementSizeChange);
 
 	//输出一些帮助信息  
-	cout << endl << "\t嗯。运行成功，请调整滚动条观察图像效果~\n\n"
+	cout << endl << "\t运行成功，请调整滚动条观察图像效果~\n\n"
 		<< "\t按下“q”键时，程序退出~!\n";
 
 	//轮询获取按键信息，若下q键，程序退出  
@@ -135,7 +135,7 @@ static int start2()
 
 	//载入原图  
 	g_srcImage = imread("d:/8.jpg");//工程目录下需要有一张名为1.jpg的素材图  
-	if (!g_srcImage.data) { printf("Oh，no，读取srcImage错误~！ \n"); return 1; }
+	if (!g_srcImage.data) { printf("读取srcImage错误~！ \n"); return 1; }
 
 	//显示原始图  
 	namedWindow("【原始图】");
@@ -256,7 +256,6 @@ static void ShowHelpText()
 		"\t\t键盘按键【2】- 使用矩形(Rectangle )结构元素\n"
 		"\t\t键盘按键【3】- 使用十字型(Cross-shaped)结构元素\n"
 		"\t\t键盘按键【空格SPACE】- 在矩形、椭圆、十字形结构元素中循环\n"
-		"\n\n\t\t\t\t\t\t\t\t by浅墨"
 	);
 }
 
