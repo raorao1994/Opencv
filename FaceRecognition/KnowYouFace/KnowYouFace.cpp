@@ -34,6 +34,14 @@ vector<Rect> faces, faces2;
 //是否翻转图片进行人脸识别
 bool tryflip = false;
 
+string intToString(int v)
+{
+	char buf[32] = { 0 };
+	snprintf(buf, sizeof(buf), "%u", v);
+
+	string str = buf;
+	return str;
+}
 //读取csv文件
 int read_csv()
 {
@@ -67,14 +75,14 @@ int main()
 	Ptr<FaceRecognizer> model = createEigenFaceRecognizer(); //特征脸 最少训练图像为两张
 	//Ptr<FaceRecognizer> model = createFisherFaceRecognizer();//FisherFace 最少训练图像为两张
 	//Ptr<FaceRecognizer> model = createLBPHFaceRecognizer();//LBP的这个方法在单个人脸验证方面效果最好
-	//进行训练  
+	//2.2进行训练  
 	model->train(images, labels);
 	//3、识别人脸
 	//创建人脸识别对象
 	CascadeClassifier cascade;
-	//加载识别库
+	//3.1加载识别库
 	cascade.load(facePath);
-	//循环读取视频帧，进行人脸识别
+	//3.2循环读取视频帧，进行人脸识别
 	bool stop = true;
 	while (true)
 	{
@@ -85,18 +93,19 @@ int main()
 		//IplImage *pImage = cvLoadImage("F://SVN//CShap//trunk//Opencv//FaceRecognition//KnowYouFace//Face//s13//17.jpg", CV_LOAD_IMAGE_UNCHANGED);
 		//frame= cv::cvarrToMat(pImage);
 		//frame = images[0];
-		//转成灰色
-		//对图像进行缩放，增加识别速度
+
+		//将图片转成灰色，对图像进行缩放，增加识别速度
 		int scale = 2;
+		//create image data
 		Mat gray, smallImg(cvRound(frame.rows / scale), cvRound(frame.cols / scale), CV_8UC1);
-		cvtColor(frame, gray, CV_BGR2GRAY);
+		cvtColor(frame, gray, CV_BGR2GRAY); 
+		//imshow("111", gray);
 		//改变图像大小，使用双线性差值
 		resize(gray, smallImg, smallImg.size(), 0, 0, INTER_LINEAR);
 		//变换后的图像进行直方图均值化处理
 		equalizeHist(smallImg, smallImg);
-		
-		cascade.detectMultiScale(smallImg, faces,
-			1.1, 2, 0
+		//进行人脸识别
+		cascade.detectMultiScale(smallImg, faces,1.1, 2, 0
 			//|CV_HAAR_FIND_BIGGEST_OBJECT
 			//|CV_HAAR_DO_ROUGH_SEARCH
 			| CV_HAAR_SCALE_IMAGE
@@ -106,43 +115,51 @@ int main()
 		if (tryflip)
 		{
 			flip(smallImg, smallImg, 1);
-			cascade.detectMultiScale(smallImg, faces2,
+			cascade.detectMultiScale(smallImg, faces,
 				1.1, 2, 0
 				//|CV_HAAR_FIND_BIGGEST_OBJECT
 				//|CV_HAAR_DO_ROUGH_SEARCH
 				| CV_HAAR_SCALE_IMAGE
 				,
 				Size(30, 30));
-			for (vector<Rect>::const_iterator r = faces2.begin(); r != faces2.end(); r++)
+			for (vector<Rect>::const_iterator r = faces.begin(); r != faces.end(); r++)
 			{
 				faces.push_back(Rect(smallImg.cols - r->x - r->width, r->y, r->width, r->height));
 			}
 		}
-		//遍历识别出来的人脸
+		
+		//create recognition variable
 		Mat Testface;
+		//create image center point location
 		Point center;
+		//遍历识别出来的人脸
 		for (size_t i = 0; i < faces.size(); i++)
 		{
 			Scalar color = colors[i % 8];
 			if (faces[i].height > 0 && faces[i].width > 0)
 			{
 				//获取测试脸
-				Testface = gray(faces[i]);
+				//Testface = gray(faces[i]);
+				Testface = smallImg(faces[i]);
 				center.x = cvRound((faces[i].x + faces[i].width*0.5)*scale);
 				center.y = cvRound((faces[i].y + faces[i].height*0.5)*scale);
 				int radius = cvRound((faces[i].width + faces[i].height)*0.25*scale);
 				CvRect rr = cvRect(center.x - radius, center.y - radius, faces[i].width * 2, faces[i].height * 2);
 				rectangle(frame, rr, color, 1, 8, 0);//画矩形框
-													 //获取测试图片大小
+				//获取测试图片大小
 				int im_width = images[0].cols;
 				int im_height = images[0].rows;
-				CvRect rect = cvRect(center.x - im_width / 2, center.y - im_height / 2, im_width, im_height);
-				//开始人脸比对
+				CvRect rect = cvRect(center.x-30 - im_width / 2, center.y-30 - im_height / 2, im_width+60, im_height+60);
+				//开始人脸比对,创建人脸对比Mat
 				Mat face_resized(Size(im_height, im_height), CV_8UC1);
+				Mat _face(Size(im_height, im_height), CV_8UC1);
 				try
 				{
+					//get recognition face image
 					Mat fa(frame, rect);//cvRect(0,0, im_width, im_height)
-					cvtColor(fa, face_resized, CV_BGR2GRAY);
+					resize(fa, _face, images[0].size(), 0, 0, INTER_LINEAR);
+					cvtColor(_face, _face, CV_BGR2GRAY);
+					//cvtColor(fa, face_resized, CV_BGR2GRAY);
 					//face_resized = fa;
 				}
 				catch (const std::exception&)
@@ -152,11 +169,11 @@ int main()
 
 				//将图片转为测试图片大小
 				//resize(Testface, face_resized, Size(im_width, im_height), 1.0, 1.0, INTER_CUBIC);
-				imshow("识别人脸", face_resized);
+				imshow("识别人脸", _face);
 				int prediction = -1;//比对结果index
 				double confidence = 0.0;//比对匹配度
-										//人脸比对
-				model->predict(face_resized, prediction, confidence);
+				//人脸比对
+				model->predict(_face, prediction, confidence);
 				cout << "这是第" << prediction << "个  相识度为:" << confidence << endl;
 				string text = format("%f, confidence = %f", prediction, confidence);
 				int n = prediction;
