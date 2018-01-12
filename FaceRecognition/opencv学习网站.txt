@@ -1,4 +1,4 @@
-怎样使用OpenCV进行人脸识别:http://www.cnblogs.com/guoming0000/archive/2012/09/27/2706019.html
+﻿怎样使用OpenCV进行人脸识别:http://www.cnblogs.com/guoming0000/archive/2012/09/27/2706019.html
 
 基于 OpenCV 的人脸识别(强烈推荐) :http://blog.csdn.net/u013346007/article/details/50569626（机器学习算法目录）
 
@@ -34,3 +34,18 @@ OpenCV实现人脸识别——EigenFace特征脸法：http://blog.csdn.net/lovel
 
 _CRT_SECURE_NO_WARNINGS//需要添加到c++程序中
 
+
+车辆识别
+https://github.com/MarvinTeichmann/KittiBox
+
+基于TensorFlow的车牌号识别系统-http://blog.csdn.net/fu_shuwu/article/details/77542167###;
+
+用opencv自带的traincascade车辆检测-http://blog.csdn.net/eagelangel/article/details/51997937###;
+
+【图像处理】Haar Adaboost 检测自定义目标（视频车辆检测算法代码）-http://blog.csdn.net/zhuangxiaobin/article/details/25476833
+
+使用OpenCV检测和追踪车辆-http://blog.csdn.net/xfgryujk/article/details/61421763
+
+Opencv3之动态目标检测：BackgroundSubtractorMOG2参数配置-http://blog.csdn.net/m0_37901643/article/details/72841289
+
+背景提取—修改高斯混合模型BackgroundSubtractorMOG2中的参数及使用-http://blog.csdn.net/xiaohaijiejie/article/details/48374943
