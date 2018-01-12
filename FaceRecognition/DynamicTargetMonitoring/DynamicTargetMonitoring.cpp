@@ -10,6 +10,7 @@ using namespace std;
 const int Train = 100;
 int main(int argc, char *argv[])
 {
+	char* videoFilename = "F:\\SVN\\OpenCV\\trunk\\VehicleDetection-master\\Data\\video2.avi";
 	Ptr<BackgroundSubtractorMOG2> mog = createBackgroundSubtractorMOG2(100, 25, false);
 	//bgsubtractor->setVarThreshold(20);  
 	Mat foreGround;
@@ -20,7 +21,8 @@ int main(int argc, char *argv[])
 	namedWindow("src");
 	namedWindow("foreground");
 
-	VideoCapture cap(0);//打开默认的摄像头      
+	VideoCapture cap(videoFilename);//打开默认的摄像头      
+	//VideoCapture cap(0);//打开默认的摄像头      
 	if (!cap.isOpened())
 	{
 		return -1;
@@ -35,7 +37,8 @@ int main(int argc, char *argv[])
 		{
 			//mog->apply(backGround, foreGround, 0.005);
 			mog->apply(src, foreGround, 0.005);
-			//图像处理过程  
+			//图像处理过程 
+			//中值滤波
 			medianBlur(foreGround, foreGround, 3);
 			dilate(foreGround, foreGround, Mat(), Point(-1, -1), 3);
 			erode(foreGround, foreGround, Mat(), Point(-1, -1), 6);
