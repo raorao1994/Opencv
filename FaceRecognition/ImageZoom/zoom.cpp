@@ -148,5 +148,6 @@ int main()
 	INTER_AREA - 区域插值（利用像素区域关系的重采样插值）
 	INTER_CUBIC –三次样条插值（超过4×4像素邻域内的双三次插值）
 	INTER_LANCZOS4 -Lanczos插值（超过8×8像素邻域的Lanczos插值）
-	
+
 	*/
+}

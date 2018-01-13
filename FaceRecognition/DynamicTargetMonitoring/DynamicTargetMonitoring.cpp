@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
 				Mat findc;
 				foreGround.copyTo(findc);
 				vector<vector<Point>> contours;
+				//Ñ°ÕÒÂÖÀª
 				cv::findContours(findc, contours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
 				//targets.clear();  
 				const int maxArea = 800;
