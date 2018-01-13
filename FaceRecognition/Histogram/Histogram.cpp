@@ -2,8 +2,11 @@
 //http://blog.csdn.net/morewindows/article/details/8364656
 #include "stdafx.h"
 //第七篇 灰度直方图
-#include <opencv2/opencv.hpp>  
-#include <opencv2/legacy/compat.hpp>  
+#include "opencv2/opencv.hpp"  
+//#include <opencv2/legacy/compat.hpp> 
+
+#define cvQueryHistValue_1D( hist, idx0 ) ((float)cvGetReal1D((hist)->bins, (idx0)))
+
 using namespace std;
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")  
 void FillWhite(IplImage *pImage)
