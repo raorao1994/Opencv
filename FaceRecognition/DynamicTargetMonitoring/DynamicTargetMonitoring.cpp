@@ -7,11 +7,11 @@
 using namespace cv;
 using namespace std;
 
-const int Train = 100;
+const int Train = 200;
 int main(int argc, char *argv[])
 {
 	char* videoFilename = "F:\\SVN\\OpenCV\\trunk\\VehicleDetection-master\\Data\\video2.avi";
-	Ptr<BackgroundSubtractorMOG2> mog = createBackgroundSubtractorMOG2(100, 25, false);
+	Ptr<BackgroundSubtractorMOG2> mog = createBackgroundSubtractorMOG2(200, 25, false);
 	//bgsubtractor->setVarThreshold(20);  
 	Mat foreGround;
 	Mat backGround;
@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
 				size_t s = contours.size();
 				for (size_t i = 0; i < s; i++)
 				{
+					//contourArea计算等高线面积
 					double area = abs(contourArea(contours[i]));
 					if (area > maxArea)
 					{
@@ -95,6 +96,7 @@ int main(int argc, char *argv[])
 			trainCounter++;
 		}
 		imshow("src", src);
+		cout << "第" << trainCounter<<"几张图片"<<endl;
 		if (waitKey(30) == 27) //Esc键退出      
 		{
 			stop = true;
