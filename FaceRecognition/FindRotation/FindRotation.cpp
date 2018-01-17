@@ -43,7 +43,7 @@ int hough_line(Mat src)
 int main()
 {
 	// Read input binary image
-	char *image_name = "test.png";
+	char *image_name = "test.png";//test.png
 	Mat image = imread(image_name, 0);
 	if (!image.data)
 		return 0;
@@ -131,23 +131,25 @@ int main()
 	//这函数可选参数还有不少
 	//如果contour不为空，表示找到一个以上轮廓，这样写法只显示一个轮廓
 	//如改为for(; contour; contour = contour->h_next) 就可以同时显示多个轮廓
-	/*cvFindContours(pSrcImage, storage, &contour, sizeof(CvContour),
-		CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE);*/
-	//for (; contour; contour = contour->h_next)
-	//{
-	//	End_Rage2D = cvMinAreaRect2(contour);
-	//	//代入cvMinAreaRect2这个函数得到最小包围矩形  这里已得出被测物体的角度，宽度,高度，和中点坐标点存放在CvBox2D类型的结构体中，  
-	//	//主要工作基本结束。
-	//	for (int i = 0; i < 4; i++)
-	//	{
-	//		//CvArr* s=(CvArr*)&result;
-	//		//cvLine(s,cvPointFrom32f(rectpoint[i]),cvPointFrom32f(rectpoint[(i+1)%4]),CV_G(0,0,255),2);  
-	//		line(result, cvPointFrom32f(rectpoint[i]), 
-	//			cvPointFrom32f(rectpoint[(i + 1) % 4]), Scalar(125), 2);
-	//	}
-	//	cvBoxPoints(End_Rage2D, rectpoint);
-	//	cout << " angle:\n" << (float)End_Rage2D.angle << endl;      //被测物体旋转角度
-	//}
+	IplImage* img_i = cvLoadImage(image_name, CV_LOAD_IMAGE_GRAYSCALE);
+	IplImage* img_temp = cvCreateImage(cvGetSize(img_i), 8, 1);
+	cvThreshold(img_i, img_i, 128, 255, CV_THRESH_BINARY);
+	cvCopy(img_i, img_temp);
+	cvFindContours(img_temp, storage, &contour, sizeof(CvContour),
+		CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE);
+	for (; contour; contour = contour->h_next)
+	{
+		End_Rage2D = cvMinAreaRect2(contour);
+		//代入cvMinAreaRect2这个函数得到最小包围矩形  这里已得出被测物体的角度，宽度,高度，和中点坐标点存放在CvBox2D类型的结构体中，  
+		//主要工作基本结束。
+		for (int i = 0; i < 4; i++)
+		{  
+			line(result, cvPointFrom32f(rectpoint[i]), 
+				cvPointFrom32f(rectpoint[(i + 1) % 4]), Scalar(125), 2);
+		}
+		cvBoxPoints(End_Rage2D, rectpoint);
+		cout << " angle:\n" << (float)End_Rage2D.angle << endl;      //被测物体旋转角度
+	}
 	imshow("结果6", result);
 	waitKey();
 	return 0;
