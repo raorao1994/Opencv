@@ -1,5 +1,5 @@
 // Remap_SURF.cpp : 定义控制台应用程序的入口点。
-//
+//特征点监测
 #include "stdafx.h"
 
 #include "opencv2/highgui/highgui.hpp"  

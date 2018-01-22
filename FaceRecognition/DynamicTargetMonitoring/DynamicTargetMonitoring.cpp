@@ -10,7 +10,7 @@ using namespace std;
 const int Train = 200;
 int main(int argc, char *argv[])
 {
-	char* videoFilename = "F:\\SVN\\OpenCV\\trunk\\VehicleDetection-master\\Data\\video2.avi";
+	char* videoFilename = "F:\\SVN\\OpenCV\\trunk\\Data\\video1.avi";
 	Ptr<BackgroundSubtractorMOG2> mog = createBackgroundSubtractorMOG2(200, 25, false);
 	//bgsubtractor->setVarThreshold(20);  
 	Mat foreGround;

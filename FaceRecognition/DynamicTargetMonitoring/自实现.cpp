@@ -1,4 +1,5 @@
 //gmm.cpp : 定义控制台应用程序的入口点。
+//https://www.cnblogs.com/tornadomeet/archive/2012/06/02/2531705.html
 #include "stdafx.h"
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
