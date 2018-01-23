@@ -30,14 +30,14 @@ private:
 	Mat u[GMM_MAX_COMPONT];//均值
 	Mat sigma[GMM_MAX_COMPONT];//方差
 	double defaultsigma = 15.0;//默认方差值 opencv 自带的gmm代码中用的是15.0
-	Mat fit_num, gmask, foreground;//？二值化图像、全景、背景
+	Mat fit_num, gmask;//？二值化图像、全景、背景
 	vector<Mat> output_m;//输出？
 	Mat output_img;//输出图片
 	float temp_w, temp_u, temp_sigma;//中间临时变量
 
 private:
 	//变量
-	int NUM_FRAME1=0, NUM_FRAME2 = 0;//已训练样本数
+	int NUM_FRAME=0;//已训练样本数
 	//GMM整体初始化函数声明
 	void GMM_Init(Mat img);
 	//GMM第一帧初始化函数声明

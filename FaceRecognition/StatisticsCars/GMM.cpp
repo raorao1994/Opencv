@@ -26,6 +26,9 @@ GMM::GMM(int END_FRAME)
 //GMM整体初始化函数声明
 void GMM::GMM_Init(Mat img)
 {
+	//初始化为1
+	fit_num = Mat(img.size(), CV_8UC1, -1);
+	gmask = Mat(img.size(), CV_8UC1, -1);
 	/****initialization the three parameters ****/
 	for (int j = 0; j < GMM_MAX_COMPONT; j++)
 	{
@@ -178,7 +181,8 @@ void GMM::GMM_Fit_Num(Mat img)
 			{
 				//cout<<w[a].at<float>(m,n)<<endl;
 				sum_w += w[a].at<float>(m, n);
-				if (sum_w >= GMM_THRESHOD_SUMW)//如果这里THRESHOD_SUMW=0.6的话，那么得到的高斯数目都为1，因为每个像素都有一个权值接近1
+				//如果这里THRESHOD_SUMW=0.6的话，那么得到的高斯数目都为1，因为每个像素都有一个权值接近1
+				if (sum_w >= GMM_THRESHOD_SUMW)
 				{
 					fit_num.at<unsigned char>(m, n) = a + 1;
 					break;
@@ -217,18 +221,18 @@ void GMM::Find_Connected_Components(Mat img)
 //训练
 void GMM::Train(Mat img)
 {
-	if (NUM_FRAME1 == 0)
+	if (NUM_FRAME == 0)
 	{
 		GMM_Init(img);
 		GMM_First_Frame(img);
-		NUM_FRAME1++;
+		NUM_FRAME++;
 	}
 	else
 	{
 		GMM_Train(img);
-		NUM_FRAME1++;
+		NUM_FRAME++;
 	}
-	if (NUM_FRAME1 == END_FRAME)
+	if (NUM_FRAME == END_FRAME)
 	{
 		GMM_Fit_Num(img);
 	}
