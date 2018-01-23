@@ -11,7 +11,14 @@
 
 using namespace cv;
 using namespace std;
+string getstring(const int n)
+{
 
+	std::stringstream newstr;
+	newstr << n;
+	return newstr.str();
+
+}
 int main()
 {
 	bool stop = false;
@@ -24,7 +31,7 @@ int main()
 	}
 	//创建图像对象
 	Mat img;
-	GMM* model = new GMM(10);
+	GMM* model = new GMM(100);
 	//
 	int i = 0;
 	while (!stop)
@@ -44,13 +51,39 @@ int main()
 		else
 		{
 			Mat binaryzationImg= model->Apply(testimg);
-			//medianBlur(binaryzationImg, binaryzationImg, 3);
-			//dilate(img, img, Mat(), Point(-1, -1), 3);
-			//erode(img, img, Mat(), Point(-1, -1), 6);
-			//dilate(img, img, Mat(), Point(-1, -1), 3);
+			medianBlur(binaryzationImg, binaryzationImg, 3);
+			dilate(binaryzationImg, binaryzationImg, Mat(), Point(-1, -1), 3);
+			erode(binaryzationImg, binaryzationImg, Mat(), Point(-1, -1), 6);
+			dilate(binaryzationImg, binaryzationImg, Mat(), Point(-1, -1), 3);
 			imshow("二值化图像", binaryzationImg);
+
+			//检测车身
+			Mat findc;
+			binaryzationImg.copyTo(findc);
+			vector<vector<Point>> contours;
+			//寻找轮廓
+			cv::findContours(findc, contours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
+			const int maxArea = 100;
+			size_t s = contours.size();
+			RNG rng;
+			for (size_t i = 0; i < s; i++)
+			{
+				double area = abs(contourArea(contours[i]));
+				if (area > maxArea)
+				{
+					Scalar sca_color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
+					Rect mr = boundingRect(Mat(contours[i]));
+					rectangle(img, mr, sca_color, 2, 8, 0);
+					//可以对动态目标进行相应操作  
+				}
+			}
+			//char text[50];
+			//sprintf_s(text, "count：", getstring(s));
+			//putText(img, text, Point(50, 50), 3, 1, Scalar(0, 255, 255), 2, 8, false);
+			cout << "数量" << s << endl;
+			imshow("标记原图", img);
 		}
-		cout << "第" << i << "几张图片" << endl;
+		cout << "第" << i << "张图片" << endl;
 		if (waitKey(10) == 27) //Esc键退出      
 		{
 			stop = true;

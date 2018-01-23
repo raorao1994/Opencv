@@ -203,7 +203,7 @@ void GMM::GMM_Test(Mat img)
 				//if(abs(img.at<unsigned char>(m,n)-u[a].at<unsigned char>(m,n))<(unsigned char)(2*(sigma[a].at<float>(m,n))))
 				if (abs(img.at<unsigned char>(m, n) - u[a].at<unsigned char>(m, n)) < (unsigned char)(2.5*(sigma[a].at<float>(m, n))))
 				{
-					gmask.at<unsigned char>(m, n) = 1;//±³¾°
+					gmask.at<unsigned char>(m, n) = 0;//±³¾°
 					break;
 				}
 			}
