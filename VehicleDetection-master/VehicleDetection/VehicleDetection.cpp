@@ -7,11 +7,7 @@
 using namespace cv;
 using namespace cvb;
 using namespace std;
-
-
 void processVideo(char* videoFilename);
-
-
 int main(int argc, _TCHAR* argv[])
 {
 	/*if (argc != 2)

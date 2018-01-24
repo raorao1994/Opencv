@@ -18,13 +18,9 @@
 //
 
 #include "stdafx.h"
-
 #include <cmath>
-
 #include <opencv/cv.h>
-
 #include "cvblob.h"
-
 namespace cvb
 {
 
