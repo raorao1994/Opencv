@@ -75,6 +75,7 @@ int main()
 	Ptr<FaceRecognizer> model = createEigenFaceRecognizer(); //特征脸 最少训练图像为两张
 	//Ptr<FaceRecognizer> model = createFisherFaceRecognizer();//FisherFace 最少训练图像为两张
 	//Ptr<FaceRecognizer> model = createLBPHFaceRecognizer();//LBP的这个方法在单个人脸验证方面效果最好
+
 	//2.2进行训练  
 	model->train(images, labels);
 	//3、识别人脸

@@ -4,10 +4,13 @@
 #include "stdafx.h"
 //图像的灰度直方图均衡化  
 #include <opencv2/opencv.hpp>  
-#include <opencv2/legacy/compat.hpp>  
+//#include <opencv2/legacy/compat.hpp> 
 #include <opencv2\opencv_modules.hpp>
+#include <opencv2\highgui\highgui.hpp>
 using namespace std;
-#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")  
+using namespace cv;
+//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")  
+
 void FillWhite(IplImage *pImage)
 {
 	cvRectangle(pImage, cvPoint(0, 0), cvPoint(pImage->width, pImage->height), CV_RGB(255, 255, 255), CV_FILLED);
@@ -27,15 +30,14 @@ IplImage* CreateHisogramImage(int nImageWidth, int nScale, int nImageHeight, CvH
 {
 	IplImage *pHistImage = cvCreateImage(cvSize(nImageWidth * nScale, nImageHeight), IPL_DEPTH_8U, 1);
 	FillWhite(pHistImage);
-
 	//统计直方图中的最大直方块  
 	float fMaxHistValue = 0;
 	cvGetMinMaxHistValue(pcvHistogram, NULL, &fMaxHistValue, NULL, NULL);
-
 	//分别将每个直方块的值绘制到图中  
 	int i;
 	for (i = 0; i < nImageWidth; i++)
 	{
+		//float fHistValue = cvQueryHistValue_1D(pcvHistogram, i);
 		float fHistValue = cvQueryHistValue_1D(pcvHistogram, i); //像素为i的直方块大小  
 		int nRealHeight = cvRound((fHistValue / fMaxHistValue) * nImageHeight);  //要绘制的高度  
 		cvRectangle(pHistImage,

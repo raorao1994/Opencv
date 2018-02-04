@@ -34,6 +34,7 @@ int main()
 	GMM* model = new GMM(100);
 	//
 	int i = 0;
+	int cars = 0;
 	while (!stop)
 	{
 		//cut out one image 
@@ -80,7 +81,8 @@ int main()
 			//char text[50];
 			//sprintf_s(text, "count：", getstring(s));
 			//putText(img, text, Point(50, 50), 3, 1, Scalar(0, 255, 255), 2, 8, false);
-			cout << "数量" << s << endl;
+			cars += s;
+			cout <<"总数："<<cars<< "实时数量" << s << endl;
 			imshow("标记原图", img);
 		}
 		cout << "第" << i << "张图片" << endl;
