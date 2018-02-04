@@ -99,7 +99,9 @@ int main()
 		int scale = 2;
 		//create image data
 		Mat gray, smallImg(cvRound(frame.rows / scale), cvRound(frame.cols / scale), CV_8UC1);
+		Mat _gray;
 		cvtColor(frame, gray, CV_BGR2GRAY); 
+		frame.copyTo(_gray);
 		//imshow("111", gray);
 		//改变图像大小，使用双线性差值
 		resize(gray, smallImg, smallImg.size(), 0, 0, INTER_LINEAR);
@@ -157,7 +159,7 @@ int main()
 				try
 				{
 					//get recognition face image
-					Mat fa(frame, rect);//cvRect(0,0, im_width, im_height)
+					Mat fa(_gray, rect);//cvRect(0,0, im_width, im_height)
 					resize(fa, _face, images[0].size(), 0, 0, INTER_LINEAR);
 					cvtColor(_face, _face, CV_BGR2GRAY);
 					//cvtColor(fa, face_resized, CV_BGR2GRAY);
