@@ -23,6 +23,8 @@ private:
 	map<string, Mat> result_bjects;
 	//存放所有训练图集的映射
 	map<string, Mat> allsample_bow;
+	//从类目名称到训练图集的映射，关键字可以重复出现
+	multimap<string, Mat> train_set;
 	//训练的得到的SVM
 	SVM *stor_svms;
 	//类目名称，也就是train_folder设置的目录名
@@ -38,7 +40,7 @@ private:
 	Ptr<FastFeatureDetector> featureDetector;
 	Ptr<DescriptorExtractor> descriptorExtractor;
 
-	Ptr<BOWKMeansTrainer> bowtrainerl;
+	Ptr<BOWKMeansTrainer> bowtrainer;
 	Ptr<BOWImgDescriptorExtractor> bowDescriptorExtractor;
 	Ptr<FlannBasedMatcher> descriptorMatcher;
 
