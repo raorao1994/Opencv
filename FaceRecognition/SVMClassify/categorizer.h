@@ -27,6 +27,7 @@ private:
 	multimap<string, Mat> train_set;
 	//训练的得到的SVM
 	SVM *stor_svms;
+	//Ptr<SVM> *stor_svms;
 	//类目名称，也就是train_folder设置的目录名
 	vector<string> category_name;
 	//类目数目
@@ -57,6 +58,8 @@ public:
 	void build_vacab();
 	//构造BOW
 	void compute_bow_image();
+	//训练分类器
+	void trainSvm();
 	//将测试图片分类
 	void category_by_svm();
 };
