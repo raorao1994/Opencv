@@ -23,7 +23,7 @@ int main()
 {
 	bool stop = false;
 	//get video file fullpath
-	char* videoFilename = "F:\\SVN\\OpenCV\\trunk\\Data\\video1.avi";
+	char* videoFilename = "../../Data/video1.avi";
 	VideoCapture cap(videoFilename);//打开默认的摄像头
 	if (!cap.isOpened())
 	{
