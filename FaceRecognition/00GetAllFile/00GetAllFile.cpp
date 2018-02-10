@@ -40,7 +40,7 @@ void getFiles(string path, vector<string>& files)
 
 int main()
 {
-	string DATA_DIR = "../../Data/svm_data";
+	string DATA_DIR = "E://µÁ◊” È";
 	vector<string> files;
 	//≤‚ ‘
 	char * DistAll = "AllFiles.txt";

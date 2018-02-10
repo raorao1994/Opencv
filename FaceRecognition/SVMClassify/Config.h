@@ -1,5 +1,5 @@
 #define DATA_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data"
-#define TRAIN_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data/train_images/"
-#define TEMPLATE_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data/templates/"
+#define TRAIN_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data/train_images"
+#define TEMPLATE_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data/templates"
 #define TEST_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data/test_image"
-#define RESULT_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data/result_image/"
+#define RESULT_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data/result_image"

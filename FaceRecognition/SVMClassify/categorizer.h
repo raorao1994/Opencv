@@ -31,8 +31,8 @@ private:
 	//从类目名称到训练图集的映射，关键字可以重复出现
 	multimap<string, Mat> train_set;
 	//训练的得到的SVM
-	SVM *stor_svms;
-	//Ptr<SVM> *stor_svms;
+	//SVM *stor_svms;
+	Ptr<SVM> stor_svms;
 	//类目名称，也就是train_folder设置的目录名
 	vector<string> category_name;
 	//类目数目
@@ -55,6 +55,8 @@ private:
 	void make_train_set();
 	//移除扩展名、用来讲模版组织成类目
 	string remove_extention(string);
+	//加载某一目录下的所有图片
+	void GetAllImg(string);
 public:
 	categorizer();
 	~categorizer();

@@ -54,6 +54,7 @@ void categorizer::make_train_set()
 	//文件信息  
 	struct _finddata_t fileinfo;
 	string p;
+	//if ((hFile = _findfirst(p.assign(TRAIN_FOLDER).append("\\*").c_str(), &fileinfo)) != -1)
 	if ((hFile = _findfirst(p.assign(TRAIN_FOLDER).append("\\*").c_str(), &fileinfo)) != -1)
 	{
 		do
@@ -63,19 +64,25 @@ void categorizer::make_train_set()
 			if ((fileinfo.attrib &  _A_SUBDIR))
 			{
 				// 将类目名称设置为目录的名称
-				categor = p.assign(TRAIN_FOLDER).append("\\").append(fileinfo.name);
-				category_name.push_back(categor);
+				//categor = p.assign(TRAIN_FOLDER).append("/").append(fileinfo.name);
+				//添加类别名到类别目录
+				//category_name.push_back(categor);
+				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)
+				{
+					categor = fileinfo.name;
+					GetAllImg(categor);
+				}
 			}
-			else
-			{
-				// 读取文件夹下的文件。level 1表示这是一副训练图，通过multimap容器来建立由类目名称到训练图的一对多的映射
-				string filename = p.assign(TRAIN_FOLDER).append("\\").append(fileinfo.name);
-				Mat temp = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
-				pair<string, Mat> p(categor, temp);
+			//else
+			//{
+			//	// 读取文件夹下的文件。level 1表示这是一副训练图，通过multimap容器来建立由类目名称到训练图的一对多的映射
+			//	string filename = p.assign(TRAIN_FOLDER).append("\\").append(fileinfo.name);
+			//	Mat temp = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
+			//	pair<string, Mat> p(categor, temp);
 
-				//得到训练集
-				train_set.insert(p);
-			}
+			//	//得到训练集
+			//	train_set.insert(p);
+			//}
 		} while (_findnext(hFile, &fileinfo) == 0);
 		_findclose(hFile);
 	}
@@ -135,7 +142,8 @@ categorizer::categorizer(int _clusters)
 	//遍历数据文件夹  directory_iterator(p)就是迭代器的起点，
 	//文件句柄  
 	long   hFile = 0;
-	//文件信息  
+	//文件信息 
+	//添加测试数据
 	struct _finddata_t fileinfo;
 	string p;
 	if ((hFile = _findfirst(p.assign(TEMPLATE_FOLDER).append("\\*").c_str(), &fileinfo)) != -1)
@@ -149,11 +157,10 @@ categorizer::categorizer(int _clusters)
 			}
 			else
 			{
-				string filename = p.assign(TEMPLATE_FOLDER).append("\\").append(fileinfo.name);
+				string filename = p.assign(TEMPLATE_FOLDER).append(fileinfo.name);
 				string sub_category = remove_extention(fileinfo.name);
 				//读入模板图片
 				Mat image = imread(filename);
-				Mat templ_image;
 				//存储原图模板
 				result_objects[sub_category] = image;
 			}
@@ -169,7 +176,7 @@ categorizer::categorizer(int _clusters)
 // 训练图片feature聚类，得出词典
 void categorizer::build_vacab()
 {
-	FileStorage vacab_fs(DATA_FOLDER "vocab.xml", FileStorage::READ);
+	FileStorage vacab_fs(DATA_FOLDER "/vocab.xml", FileStorage::READ);
 	//如果之前已经生成好，就不需要重新聚类生成词典
 	if (vacab_fs.isOpened())
 	{
@@ -188,7 +195,8 @@ void categorizer::build_vacab()
 			Mat descrip;
 			featureDetector->detect(templ, kp);
 			descriptorExtractor->compute(templ, kp, descrip);
-			//push_back(Mat);在原来的Mat的最后一行后再加几行,元素为Mat时， 其类型和列的数目 必须和矩阵容器是相同的
+			//push_back(Mat);在原来的Mat的最后一行后再加几行,元素为Mat时,
+			//其类型和列的数目 必须和矩阵容器是相同的
 			vocab_descriptors.push_back(descrip);
 		}
 		cout << "训练图片开始聚类..." << endl;
@@ -199,7 +207,7 @@ void categorizer::build_vacab()
 		cout << "聚类完毕，得出词典..." << endl;
 
 		//以文件格式保存词典
-		FileStorage file_stor(DATA_FOLDER "vocab.xml", FileStorage::WRITE);
+		FileStorage file_stor(DATA_FOLDER "/vocab.xml", FileStorage::WRITE);
 		file_stor << "vocabulary" << vocab;
 		file_stor.release();
 	}
@@ -208,7 +216,7 @@ void categorizer::build_vacab()
 void categorizer::compute_bow_image()
 {
 	cout << "构造bag of words..." << endl;
-	FileStorage va_fs(DATA_FOLDER "vocab.xml", FileStorage::READ);
+	FileStorage va_fs(DATA_FOLDER "/vocab.xml", FileStorage::READ);
 	//如果词典存在则直接读取
 	if (va_fs.isOpened())
 	{
@@ -223,12 +231,15 @@ void categorizer::compute_bow_image()
 		bowDescriptorExtractor->setVocabulary(vocab);
 	}
 	//如果bow.txt已经存在说明之前已经训练过了，下面就不用重新构造BOW
-	string bow_path = string(DATA_FOLDER) + string("bow.txt");
+	string bow_path = string(DATA_FOLDER) + string("/bow.txt");
 	ifstream read_file(bow_path);
-
 	//如BOW已经存在，则不需要构造
-	if (!read_file)
+	if (read_file)
 	{
+		//读取allsample_bow
+		/*FileStorage allsimple_data(DATA_FOLDER "/allsample_bow.xml", FileStorage::READ);
+		allsimple_data["allsample_bow"] >> allsample_bow;
+		allsimple_data.release();*/
 		cout << "BOW 已经准备好..." << endl;
 	}
 	else {
@@ -242,13 +253,22 @@ void categorizer::compute_bow_image()
 			Mat imageDescriptor;
 			featureDetector->detect(tem_image, kp);
 			bowDescriptorExtractor->compute(tem_image, kp, imageDescriptor);
-			//push_back(Mat);在原来的Mat的最后一行后再加几行,元素为Mat时， 其类型和列的数目 必须和矩阵容器是相同的
+			//push_back(Mat);在原来的Mat的最后一行后再加几行,元素为Mat时，
+			//其类型和列的数目 必须和矩阵容器是相同的
 			allsample_bow[cate_nam].push_back(imageDescriptor);
 		}
+		//保存allsample_bow
+		/*FileStorage samplefile_stor(DATA_FOLDER "/allsample_bow.xml", FileStorage::WRITE);
+		if (samplefile_stor.isOpened()) 
+		{
+			samplefile_stor << "allsample_bow" << allsample_bow;
+			samplefile_stor.release();
+		}*/
 		//简单输出一个文本，为后面判断做准备
 		ofstream ous(bow_path);
 		ous << "flag";
 		cout << "bag of words构造完毕..." << endl;
+
 	}
 }
 //训练分类器
@@ -257,7 +277,7 @@ void categorizer::trainSvm()
 	int flag = 0;
 	for (int k = 0; k<category_size; k++)
 	{
-		string svm_file_path = string(DATA_FOLDER) + category_name[k] + string("SVM.xml");
+		string svm_file_path = string(DATA_FOLDER)+"/" + category_name[k] + string("_SVM.xml");
 		FileStorage svm_fil(svm_file_path, FileStorage::READ);
 		//判断训练结果是否存在
 		if (svm_fil.isOpened())
@@ -311,8 +331,8 @@ void categorizer::trainSvm()
 			//stor_svms[i].train(tem_Samples, responses, Mat(), Mat(), svmParams);
 			stor_svms->train(tem_Samples, ROW_SAMPLE, responses);//?有问题
 			//存储svm
-			string svm_filename = string(DATA_FOLDER) + category_name[i] + string("SVM.xml");
-			stor_svms[i].save(svm_filename.c_str());
+			string svm_filename = string(DATA_FOLDER) + "/"+category_name[i] + string("_SVM.xml");
+			stor_svms->save(svm_filename.c_str());
 		}
 		cout << "分类器训练完毕..." << endl;
 	}
@@ -416,6 +436,10 @@ void categorizer::category_by_svm()
 	{
 		do
 		{
+			if ((fileinfo.attrib &  _A_SUBDIR))
+			{
+				continue;
+			}
 			//获取该目录下的图片名
 			string train_pic_name = fileinfo.name;
 			string train_pic_path = string(TEST_FOLDER) + string("/") + train_pic_name;
@@ -437,10 +461,8 @@ void categorizer::category_by_svm()
 
 			for (int i = 0; i<category_size; i++)
 			{
-
 				string cate_na = category_name[i];
-
-				string f_path = string(DATA_FOLDER) + cate_na + string("SVM.xml");
+				string f_path = string(DATA_FOLDER)+ "/"+ cate_na + string("_SVM.xml");
 				FileStorage svm_fs(f_path, FileStorage::READ);
 				//读取SVM.xml
 				if (svm_fs.isOpened())
@@ -449,13 +471,13 @@ void categorizer::category_by_svm()
 					svm_fs.release();
 					//SVM st_svm;
 					string svm_xml_path = f_path.c_str();
-					Ptr<SVM> st_svm = StatModel::load<SVM>(svm_xml_path);
 					//st_svm.load(f_path.c_str());
-
+					Ptr<SVM> st_svm = StatModel::load<SVM>(svm_xml_path);
 					if (sign == 0)
 					{
 						//float score_Value = st_svm.predict(test, true);
 						//float class_Value = st_svm.predict(test, false);
+						Mat outmat;
 						float score_Value = st_svm->predict(test);
 						float class_Value = st_svm->predict(test);
 						sign = (score_Value < 0.0f) == (class_Value < 0.0f) ? 1 : -1;
@@ -463,28 +485,25 @@ void categorizer::category_by_svm()
 					//curConfidence = sign * st_svm.predict(test, true);
 					curConfidence = sign * st_svm->predict(test);
 				}
-				else
-				{
-					if (sign == 0)
-					{
-						//float scoreValue = stor_svms[i].predict(test, true);
-						//float classValue = stor_svms[i].predict(test, false);
-						float scoreValue = stor_svms[i].predict(test);
-						float classValue = stor_svms[i].predict(test);
-						sign = (scoreValue < 0.0f) == (classValue < 0.0f) ? 1 : -1;
-					}
-					//curConfidence = sign * stor_svms[i].predict(test, true);
-					curConfidence = sign * stor_svms[i].predict(test);
-
-				}
-
+				//else
+				//{
+				//	if (sign == 0)
+				//	{
+				//		//float scoreValue = stor_svms[i].predict(test, true);
+				//		//float classValue = stor_svms[i].predict(test, false);
+				//		float scoreValue = stor_svms[i].predict(test);
+				//		float classValue = stor_svms[i].predict(test);
+				//		sign = (scoreValue < 0.0f) == (classValue < 0.0f) ? 1 : -1;
+				//	}
+				//	//curConfidence = sign * stor_svms[i].predict(test, true);
+				//	curConfidence = sign * stor_svms[i].predict(test);
+				//}
 				if (curConfidence>best_score)
 				{
 					best_score = curConfidence;
 					prediction_category = cate_na;
 				}
 			}
-
 			//文件句柄  
 			long   hFile1 = 0;
 			//文件信息  
@@ -496,18 +515,51 @@ void categorizer::category_by_svm()
 				{
 					if (fileinfo1.name == prediction_category)
 					{
-						string filename1 = string(RESULT_FOLDER) + prediction_category + string("/") + train_pic_name;
-						imwrite(filename1, input_pic);
+						string filename1 = string(RESULT_FOLDER) +"/"+ prediction_category + string("/") + train_pic_name;
+						//imwrite(filename1, input_pic);
 					}
 				} while (_findnext(hFile1, &fileinfo1) == 0);
 				_findclose(hFile1);
 			}
 			//显示输出
-			namedWindow("Dectect Object");
 			cout << "这张图属于： " << prediction_category << endl;
-			imshow("Dectect Object", result_objects[prediction_category]);
+			//imshow("Dectect Object", result_objects[prediction_category]);
 			waitKey(0);
 
+		} while (_findnext(hFile, &fileinfo) == 0);
+		_findclose(hFile);
+	}
+}
+//加载某一目录下的所有图片
+void categorizer::GetAllImg(string categor)
+{
+	string p;
+	string path = p.assign(TRAIN_FOLDER).append("/").append(categor);
+	//文件句柄  
+	long   hFile = 0;
+	//文件信息  
+	struct _finddata_t fileinfo;
+	if ((hFile = _findfirst((path+"\\*").c_str(), &fileinfo)) != -1)
+	{
+		//添加类别名到类别目录
+		category_name.push_back(categor);
+		do
+		{
+			//如果是目录,迭代之  
+			//如果不是,加入列表
+			if ((fileinfo.attrib &  _A_SUBDIR))
+			{
+				string str = fileinfo.name;
+			}
+			else
+			{
+				// 读取文件夹下的文件。level 1表示这是一副训练图，通过multimap容器来建立由类目名称到训练图的一对多的映射
+				string filename = p.assign(path).append("/").append(fileinfo.name);
+				Mat temp = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
+				pair<string, Mat> p(categor, temp);
+				//得到训练集
+				train_set.insert(p);
+			}
 		} while (_findnext(hFile, &fileinfo) == 0);
 		_findclose(hFile);
 	}
