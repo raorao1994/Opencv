@@ -167,8 +167,6 @@ categorizer::categorizer(int _clusters)
 		} while (_findnext(hFile, &fileinfo) == 0);
 		_findclose(hFile);
 	}
-
-
 	cout << "初始化完毕..." << endl;
 	//读取训练集
 	make_train_set();
@@ -234,7 +232,7 @@ void categorizer::compute_bow_image()
 	string bow_path = string(DATA_FOLDER) + string("/bow.txt");
 	ifstream read_file(bow_path);
 	//如BOW已经存在，则不需要构造
-	if (read_file)
+	if (read_file&&!read_file)
 	{
 		//读取allsample_bow
 		/*FileStorage allsimple_data(DATA_FOLDER "/allsample_bow.xml", FileStorage::READ);
@@ -268,7 +266,6 @@ void categorizer::compute_bow_image()
 		ofstream ous(bow_path);
 		ous << "flag";
 		cout << "bag of words构造完毕..." << endl;
-
 	}
 }
 //训练分类器
@@ -301,9 +298,10 @@ void categorizer::trainSvm()
 		stor_svms = SVM::create();
 		//设置训练参数
 		stor_svms->setType(SVM::C_SVC);
-		stor_svms->setKernel(SVM::POLY);//CvSVM::LINEAR
+		stor_svms->setKernel(SVM::RBF);//CvSVM::LINEAR POLY  RBF
 		stor_svms->setDegree(1.0);
-		stor_svms->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 100, 1e-6));
+		//stor_svms->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 100, 1e-6));
+		stor_svms->setTermCriteria(TermCriteria(CV_TERMCRIT_EPS, 1000, FLT_EPSILON));
 		//设置训练参数
 		//SVMParams svmParams;
 		//svmParams.svm_type = CvSVM::C_SVC;
@@ -329,6 +327,7 @@ void categorizer::trainSvm()
 				responses.push_back(response);
 			}
 			//stor_svms[i].train(tem_Samples, responses, Mat(), Mat(), svmParams);
+			cout << responses << endl;
 			stor_svms->train(tem_Samples, ROW_SAMPLE, responses);//?有问题
 			//存储svm
 			string svm_filename = string(DATA_FOLDER) + "/"+category_name[i] + string("_SVM.xml");
@@ -461,6 +460,7 @@ void categorizer::category_by_svm()
 
 			for (int i = 0; i<category_size; i++)
 			{
+				prediction_category = "未知类型";
 				string cate_na = category_name[i];
 				string f_path = string(DATA_FOLDER)+ "/"+ cate_na + string("_SVM.xml");
 				FileStorage svm_fs(f_path, FileStorage::READ);
@@ -480,29 +480,22 @@ void categorizer::category_by_svm()
 						Mat outmat;
 						float score_Value = st_svm->predict(test);
 						float class_Value = st_svm->predict(test);
-						sign = (score_Value < 0.0f) == (class_Value < 0.0f) ? 1 : -1;
+						//sign = (score_Value < 0.0f) == (class_Value < 0.0f) ? 1 : -1;
+						sign = (class_Value > 0.0f) ? 1 : -1;
+						if (sign == 1) {
+							prediction_category = cate_na;
+							break;
+						}
+						sign = 0;
 					}
 					//curConfidence = sign * st_svm.predict(test, true);
-					curConfidence = sign * st_svm->predict(test);
+					//curConfidence = sign * st_svm->predict(test);
 				}
-				//else
-				//{
-				//	if (sign == 0)
-				//	{
-				//		//float scoreValue = stor_svms[i].predict(test, true);
-				//		//float classValue = stor_svms[i].predict(test, false);
-				//		float scoreValue = stor_svms[i].predict(test);
-				//		float classValue = stor_svms[i].predict(test);
-				//		sign = (scoreValue < 0.0f) == (classValue < 0.0f) ? 1 : -1;
-				//	}
-				//	//curConfidence = sign * stor_svms[i].predict(test, true);
-				//	curConfidence = sign * stor_svms[i].predict(test);
-				//}
-				if (curConfidence>best_score)
+				/*if (curConfidence>best_score)
 				{
 					best_score = curConfidence;
 					prediction_category = cate_na;
-				}
+				}*/
 			}
 			//文件句柄  
 			long   hFile1 = 0;
