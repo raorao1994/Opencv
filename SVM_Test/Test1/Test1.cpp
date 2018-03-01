@@ -43,7 +43,7 @@ int main()
 		{
 			Mat sampleMat = (Mat_<float>(1, 2) << i, j);
 			float response = SVM->predict(sampleMat);
-			if (response > 1)
+			if (response >= 1)
 				image.at<Vec3b>(j, i) = green;
 			else
 				image.at<Vec3b>(j, i) = blue;
