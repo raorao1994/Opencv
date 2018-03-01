@@ -1,6 +1,6 @@
 // Test4-pic.cpp : 定义控制台应用程序的入口点。
 //SVM模型训练与分类的OpenCV实现 -图片分类
-#include <stdio.h>  
+#include "stdafx.h"
 #include <time.h>  
 #include <opencv2/opencv.hpp>  
 #include <opencv/cv.h>  
@@ -9,6 +9,8 @@
 #include <opencv2/highgui/highgui.hpp>  
 #include <opencv2/ml/ml.hpp>  
 #include <io.h>
+#include <map>
+#include <fstream>
 
 using namespace std;
 using namespace cv;
@@ -52,8 +54,8 @@ int main()
 	SVM_params.nu = 0;
 	SVM_params.p = 0;
 	SVM_params.term_crit = cvTermCriteria(CV_TERMCRIT_ITER, 1000, 0.01);*/
+
 	//训练
-	
 	svm->train(trainingData, ROW_SAMPLE, classes);
 	//保存模型
 	svm->save("svm.xml");
@@ -63,9 +65,10 @@ int main()
 }
 void getFiles(string path, vector<string>& files)
 {
-	long   hFile = 0;
+	intptr_t   hFile = 0;
 	struct _finddata_t fileinfo;
 	string p;
+	long i;
 	if ((hFile = _findfirst(p.assign(path).append("\\*").c_str(), &fileinfo)) != -1)
 	{
 		do
@@ -80,36 +83,44 @@ void getFiles(string path, vector<string>& files)
 				files.push_back(p.assign(path).append("\\").append(fileinfo.name));
 			}
 		} while (_findnext(hFile, &fileinfo) == 0);
-
 		_findclose(hFile);
 	}
 }
 void getBubble(Mat& trainingImages, vector<int>& trainingLabels)
 {
-	char * filePath = "D:\\train\\has\\train";
+	string filePath = "E:/Github/projectdata/data/train_images/airplanes";
 	vector<string> files;
 	getFiles(filePath, files);
 	int number = files.size();
 	for (int i = 0; i < number; i++)
 	{
-		Mat  SrcImage = imread(files[i].c_str());
-		SrcImage = SrcImage.reshape(1, 1);
-		trainingImages.push_back(SrcImage);
+		string imgpath = files[i].c_str();
+		Mat  SrcImage = imread(imgpath);
+		//缩放
+		Size dsize = Size(200, 200);
+		Mat image2 = Mat(dsize, CV_32S);
+		resize(SrcImage, image2, dsize);
+		image2 = image2.reshape(1, 1);
+		trainingImages.push_back(image2);
 		trainingLabels.push_back(1);
 	}
 }
 void getNoBubble(Mat& trainingImages, vector<int>& trainingLabels)
 {
-	char * filePath = "D:\\train\\no\\train";
+	string filePath = "E:/Github/projectdata/data/train_images/butterfly";
 	vector<string> files;
 	getFiles(filePath, files);
 	int number = files.size();
 	for (int i = 0; i < number; i++)
 	{
-		Mat  SrcImage = imread(files[i].c_str());
-		SrcImage = SrcImage.reshape(1, 1);
-		trainingImages.push_back(SrcImage);
-		trainingLabels.push_back(0);
+		string imgpath = files[i].c_str();
+		Mat  SrcImage = imread(imgpath);
+		//缩放
+		Size dsize = Size(200, 200);
+		Mat image2 = Mat(dsize, CV_32S);
+		resize(SrcImage, image2, dsize);
+		image2 = image2.reshape(1, 1);
+		trainingImages.push_back(image2);
+		trainingLabels.push_back(1);
 	}
 }
-

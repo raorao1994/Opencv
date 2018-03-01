@@ -111,7 +111,7 @@ int main()
 	Mat res_mat1(res_mat.rows, res_mat.cols, CV_32SC1, res_mat.data.fl);
 	//data_mat1 = data_mat;
 	svm->train(data_mat1, ROW_SAMPLE, res_mat1);
-
+	svm->save("svm.xml");
 	// Ñ§Ï°½á¹û»æÍ¼    
 	for (i = 0; i<size; i++)
 	{
