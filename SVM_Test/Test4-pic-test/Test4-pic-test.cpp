@@ -17,40 +17,45 @@ using namespace cv;
 using namespace cv::ml;
 
 void getFiles(string path, vector<string>& files);
-void getBubble(Mat& trainingImages, vector<int>& trainingLabels);
-void getNoBubble(Mat& trainingImages, vector<int>& trainingLabels);
 
 int main()
 {
-	//获取训练数据
-	Mat classes;
-	Mat trainingData;
-	Mat trainingImages;
-	vector<int> trainingLabels;
-	getBubble(trainingImages, trainingLabels);
-	getNoBubble(trainingImages, trainingLabels);
-	Mat(trainingImages).copyTo(trainingData);
-	trainingData.convertTo(trainingData, CV_32FC1);
-	Mat(trainingLabels).copyTo(classes);
-	//配置SVM训练器参数
-	Ptr<SVM> svm =SVM::create();
-	svm->setType(SVM::C_SVC);
-	svm->setKernel(SVM::LINEAR);//LINEAR
-	svm->setDegree(0);
-	svm->setGamma(1);
-	svm->setCoef0(0);
-	svm->setC(1);
-	svm->setNu(0);
-	svm->setP(0);
-	//svm->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 1000, 0.01));
-	svm->setTermCriteria(TermCriteria(TermCriteria::EPS, 100, 1e-6));
-	//训练
-	svm->train(trainingData, ROW_SAMPLE, classes);
-	//保存模型
-	svm->save("svm.xml");
-	cout << "训练好了！！！" << endl;
+	int result = 0;
+	char * filePath = "E:/Github/projectdata/data/test_image";
+	vector<string> files;
+	getFiles(filePath, files);
+	int number = files.size();
+	cout <<"训练数据数量"<< number << endl;
+	string modelpath = "svm.xml";
+	//Ptr<SVM> svm = SVM::create();
+	Ptr<SVM> svm= SVM::load(modelpath.c_str());
+	//svm->clear();
+	FileStorage svm_fs(modelpath, FileStorage::READ);
+	if (svm_fs.isOpened())
+	{
+		//svm->load(modelpath.c_str());
+	}
+	for (int i = 0; i < number; i++)
+	{
+		Mat inMat = imread(files[i].c_str());
+		Mat gray;
+		cvtColor(inMat, gray, CV_BGR2GRAY);
+		//缩放
+		Size dsize = Size(200, 200);
+		Mat image2 = Mat(dsize, CV_32SC1);
+		resize(gray, image2, dsize);
+		image2 = image2.reshape(1, 1);
+		image2.convertTo(image2, CV_32FC1);
+		int response = (int)svm->predict(image2);
+		cout << "训练结果" << response << endl;
+		if (response == 1)
+		{
+			result++;
+		}
+	}
+	cout << result << endl;
 	getchar();
-	return 0;
+	return  0;
 }
 void getFiles(string path, vector<string>& files)
 {
