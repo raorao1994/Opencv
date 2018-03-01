@@ -25,10 +25,10 @@ int main()
 	vector<string> files;
 	getFiles(filePath, files);
 	int number = files.size();
-	cout <<"训练数据数量"<< number << endl;
+	cout << "训练数据数量" << number << endl;
 	string modelpath = "svm.xml";
 	//Ptr<SVM> svm = SVM::create();
-	Ptr<SVM> svm= SVM::load(modelpath.c_str());
+	Ptr<SVM> svm = SVM::load(modelpath.c_str());
 	//svm->clear();
 	FileStorage svm_fs(modelpath, FileStorage::READ);
 	if (svm_fs.isOpened())
@@ -47,7 +47,7 @@ int main()
 		image2 = image2.reshape(1, 1);
 		image2.convertTo(image2, CV_32FC1);
 		int response = (int)svm->predict(image2);
-		cout << "训练结果" << response << endl;
+		cout << "训练图片" << files[i].c_str() << "训练结果" << response << endl;
 		if (response == 1)
 		{
 			result++;
