@@ -21,7 +21,7 @@ void getFiles(string path, vector<string>& files);
 int main()
 {
 	int result = 0;
-	char * filePath = "E:/Github/projectdata/data/test_image";
+	char * filePath = "E:/SVN/OpenCV/trunk/Data/svm_data/test_image";
 	vector<string> files;
 	getFiles(filePath, files);
 	int number = files.size();
@@ -43,7 +43,7 @@ int main()
 		//Ëõ·Å
 		Size dsize = Size(200, 200);
 		Mat image2 = Mat(dsize, CV_32SC1);
-		resize(gray, image2, dsize);
+		resize(inMat, image2, dsize);
 		image2 = image2.reshape(1, 1);
 		image2.convertTo(image2, CV_32FC1);
 		int response = (int)svm->predict(image2);

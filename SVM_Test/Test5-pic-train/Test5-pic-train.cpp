@@ -28,7 +28,7 @@ int main()
 	vector<int> trainingLabels;
 	//getBubble(trainingImages, trainingLabels);
 	//getNoBubble(trainingImages, trainingLabels);
-	string basePath = "E:/Github/projectdata/data/train_images";
+	string basePath = "E:/SVN/OpenCV/trunk/Data/svm_data/train_images";
 	getClass(basePath, trainingImages, trainingLabels);
 
 	Mat(trainingImages).copyTo(trainingData);
@@ -47,6 +47,7 @@ int main()
 	//svm->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 1000, 0.01));
 	svm->setTermCriteria(TermCriteria(TermCriteria::EPS, 100, 1e-6));
 	//训练
+	cout << "开始训练模型" << endl;
 	svm->train(trainingData, ROW_SAMPLE, classes);
 	//保存模型
 	svm->save("svm.xml");
@@ -69,6 +70,7 @@ void getClass(string path, Mat& trainingImages, vector<int>& trainingLabels)
 			{
 				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)
 				{
+					cout << "开始加载" << fileinfo.name<<"类数据" << endl;
 					getData(p.assign(path).append("\\").append(fileinfo.name), index, trainingImages, trainingLabels);
 					index++;
 				}	
@@ -114,7 +116,7 @@ void getData(string filePath,int index,Mat& trainingImages, vector<int>& trainin
 		//缩放
 		Size dsize = Size(200, 200);
 		Mat image2 = Mat(dsize, CV_32SC1);
-		resize(gray, image2, dsize);
+		resize(SrcImage, image2, dsize);
 		image2 = image2.reshape(1, 1);
 		trainingImages.push_back(image2);
 		trainingLabels.push_back(index);
