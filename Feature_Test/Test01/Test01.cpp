@@ -1,5 +1,5 @@
 // Test01.cpp : 定义控制台应用程序的入口点。
-//
+//第一个测试项目
 
 #include "stdafx.h"
 #include "opencv2/core.hpp"    
@@ -22,8 +22,8 @@ using namespace cv::ml;
 int main()
 {
 	//左右相机的图像来源于MiddleBury图片库
-	Mat a = imread("D:/1.jpg", 0);
-	Mat b = imread("D:/2.jpg", 0);
+	Mat a = imread("D:/9.jpg", 0);
+	Mat b = imread("D:/12.jpg", 0);
 	//创建方式和OpenCV2中的不一样,并且要加上命名空间xfreatures2d
 	//否则即使配置好了还是显示SURF为未声明的标识符
 	Ptr<SURF> surf;
