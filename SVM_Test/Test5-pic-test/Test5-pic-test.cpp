@@ -22,6 +22,7 @@ int main()
 {
 	int result = 0;
 	char * filePath = "E:/SVN/OpenCV/trunk/Data/svm_data/test_image";
+	filePath = "E:/TablewareRecognition/ÕÎ-≤‚ ‘";
 	vector<string> files;
 	getFiles(filePath, files);
 	int number = files.size();
