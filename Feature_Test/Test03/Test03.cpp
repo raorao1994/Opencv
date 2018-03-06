@@ -16,11 +16,11 @@
 #include <fstream>
 #include<io.h>
 
-#define DATA_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data"
-#define TRAIN_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data/train_images"
-#define TEMPLATE_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data/templates"
-#define TEST_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data/test_image"
-#define RESULT_FOLDER "E:/SVN/OpenCV/trunk/Data/svm_data/result_image"
+#define DATA_FOLDER "E:/Github/projectdata/data/svm_data"
+#define TRAIN_FOLDER "E:/Github/projectdata/data/train_images"
+#define TEMPLATE_FOLDER "E:/Github/projectdata/data/templates"
+#define TEST_FOLDER "E:/Github/projectdata/data/test_image"
+#define RESULT_FOLDER "E:/Github/projectdata/data/result_image"
 
 using namespace std;
 using namespace cv;
@@ -41,13 +41,13 @@ vector<string> category_name;
 int category_size;
 //用SURF特征构造视觉词汇的聚类数目
 int clusters;
-//存放训练的图片词典
+//存放聚类完成后的聚类向量
 Mat vocab;
 
 //特征检测器detectors与描述子提取器extractors泛型句柄类Ptr
 Ptr<SurfFeatureDetector> featureDetector;
 Ptr<DescriptorExtractor> descriptorExtractor;
-
+//KMeans聚类应用类
 Ptr<BOWKMeansTrainer> bowtrainer;
 Ptr<BOWImgDescriptorExtractor> bowDescriptorExtractor;
 Ptr<FlannBasedMatcher> descriptorMatcher;
@@ -64,7 +64,22 @@ void GetAllImg(string categor);
 
 int main()
 {
-    return 0;
+	/*Mat responses( 0, 1, CV_32SC1 );
+	Mat posResponses(5, 2, CV_32SC1, Scalar::all(1));
+	responses.push_back(posResponses);
+	cout << endl << responses << endl << endl;
+	waitKey(10000);*/
+	int clusters = 1000;
+	categorizer(clusters);
+	//特征聚类
+	build_vacab();
+	//构造BOW
+	compute_bow_image();
+	//训练分类器
+	trainSvm();
+	//将测试图片分类
+	category_by_svm();
+	return 0;
 }
 
 //构造训练集合
@@ -72,7 +87,6 @@ void make_train_set()
 {
 	cout << "读取训练集..." << endl;
 	string categor;
-	//递归迭代rescursive 直接定义两个迭代器：i为迭代起点（有参数），end_iter迭代终点
 	//文件句柄  
 	long   hFile = 0;
 	//文件信息  
@@ -82,14 +96,10 @@ void make_train_set()
 	{
 		do
 		{
-			//如果是目录,迭代之  
-			//如果不是,加入列表  
+			//如果是目录,迭代之,如果不是,加入列表  
 			if ((fileinfo.attrib &  _A_SUBDIR))
 			{
-				// 将类目名称设置为目录的名称
-				//categor = p.assign(TRAIN_FOLDER).append("/").append(fileinfo.name);
-				//添加类别名到类别目录
-				//category_name.push_back(categor);
+				//将类目名称设置为目录的名称,添加类别名到类别目录
 				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)
 				{
 					categor = fileinfo.name;
@@ -122,7 +132,6 @@ void categorizer(int _clusters)
 	descriptorMatcher = new FlannBasedMatcher();
 	bowDescriptorExtractor = new BOWImgDescriptorExtractor(descriptorExtractor, descriptorMatcher);
 
-	//遍历数据文件夹  directory_iterator(p)就是迭代器的起点，
 	//文件句柄  
 	long   hFile = 0;
 	//文件信息 
@@ -135,10 +144,7 @@ void categorizer(int _clusters)
 		{
 			//如果是目录,迭代之  
 			//如果不是,加入列表  
-			if ((fileinfo.attrib &  _A_SUBDIR))
-			{
-			}
-			else
+			if (!(fileinfo.attrib &  _A_SUBDIR))
 			{
 				string filename = p.assign(TEMPLATE_FOLDER).append(fileinfo.name);
 				string sub_category = remove_extention(fileinfo.name);
@@ -211,45 +217,22 @@ void compute_bow_image()
 		//对每张图片的特征点，统计这张图片各个类别出现的频率，作为这张图片的bag of words
 		bowDescriptorExtractor->setVocabulary(vocab);
 	}
-	//如果bow.txt已经存在说明之前已经训练过了，下面就不用重新构造BOW
-	string bow_path = string(DATA_FOLDER) + string("/bow.txt");
-	ifstream read_file(bow_path);
-	//如BOW已经存在，则不需要构造
-	if (read_file && !read_file)
+
+	// 对于每一幅模板，提取SURF算子，存入到vocab_descriptors中
+	multimap<string, Mat> ::iterator i = train_set.begin();
+	for (; i != train_set.end(); i++)
 	{
-		//读取allsample_bow
-		/*FileStorage allsimple_data(DATA_FOLDER "/allsample_bow.xml", FileStorage::READ);
-		allsimple_data["allsample_bow"] >> allsample_bow;
-		allsimple_data.release();*/
-		cout << "BOW 已经准备好..." << endl;
+		vector<KeyPoint>kp;
+		string cate_nam = (*i).first;
+		Mat tem_image = (*i).second;
+		Mat imageDescriptor;
+		featureDetector->detect(tem_image, kp);
+		bowDescriptorExtractor->compute(tem_image, kp, imageDescriptor);
+		//push_back(Mat);在原来的Mat的最后一行后再加几行,元素为Mat时，
+		//其类型和列的数目 必须和矩阵容器是相同的
+		allsample_bow[cate_nam].push_back(imageDescriptor);
 	}
-	else {
-		// 对于每一幅模板，提取SURF算子，存入到vocab_descriptors中
-		multimap<string, Mat> ::iterator i = train_set.begin();
-		for (; i != train_set.end(); i++)
-		{
-			vector<KeyPoint>kp;
-			string cate_nam = (*i).first;
-			Mat tem_image = (*i).second;
-			Mat imageDescriptor;
-			featureDetector->detect(tem_image, kp);
-			bowDescriptorExtractor->compute(tem_image, kp, imageDescriptor);
-			//push_back(Mat);在原来的Mat的最后一行后再加几行,元素为Mat时，
-			//其类型和列的数目 必须和矩阵容器是相同的
-			allsample_bow[cate_nam].push_back(imageDescriptor);
-		}
-		//保存allsample_bow
-		/*FileStorage samplefile_stor(DATA_FOLDER "/allsample_bow.xml", FileStorage::WRITE);
-		if (samplefile_stor.isOpened())
-		{
-		samplefile_stor << "allsample_bow" << allsample_bow;
-		samplefile_stor.release();
-		}*/
-		//简单输出一个文本，为后面判断做准备
-		ofstream ous(bow_path);
-		ous << "flag";
-		cout << "bag of words构造完毕..." << endl;
-	}
+	cout << "bag of words构造完毕..." << endl;
 }
 //训练分类器
 void trainSvm()
@@ -281,19 +264,21 @@ void trainSvm()
 		stor_svms = SVM::create();
 		//设置训练参数
 		stor_svms->setType(SVM::C_SVC);
-		stor_svms->setKernel(SVM::RBF);//CvSVM::LINEAR POLY  RBF
-		stor_svms->setDegree(1.0);
-		//stor_svms->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 100, 1e-6));
-		stor_svms->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 1000, FLT_EPSILON));
+		stor_svms->setKernel(SVM::LINEAR);//CvSVM::LINEAR POLY  RBF
+		stor_svms->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 100, 1e-6));
 		cout << "训练分类器..." << endl;
 		for (int i = 0; i<category_size; i++)
 		{
+			//定义传入训练数据大小
 			Mat tem_Samples(0, allsample_bow.at(category_name[i]).cols,
 				allsample_bow.at(category_name[i]).type());
+			//定义传入训练数据Lable大小
 			Mat responses(0, 1, CV_32SC1);
+			//传入正向数据
 			tem_Samples.push_back(allsample_bow.at(category_name[i]));
 			Mat posResponses(allsample_bow.at(category_name[i]).rows, 1, CV_32SC1, Scalar::all(1));
 			responses.push_back(posResponses);
+			//传入反向数据
 			for (auto itr = allsample_bow.begin(); itr != allsample_bow.end(); ++itr)
 			{
 				if (itr->first == category_name[i]) {
@@ -303,8 +288,8 @@ void trainSvm()
 				Mat response(itr->second.rows, 1, CV_32SC1, Scalar::all(-1));
 				responses.push_back(response);
 			}
-			cout << responses << endl;
-			stor_svms->train(tem_Samples, ROW_SAMPLE, responses);//?有问题
+			//训练模型
+			stor_svms->train(tem_Samples, ROW_SAMPLE, responses);
 			//存储svm
 			string svm_filename = string(DATA_FOLDER) + "/" + category_name[i] + string("_SVM.xml");
 			stor_svms->save(svm_filename.c_str());
@@ -338,7 +323,6 @@ void category_by_svm()
 			string train_pic_path = string(TEST_FOLDER) + string("/") + train_pic_name;
 
 			//读取图片
-			cout << train_pic_path << endl;
 			Mat input_pic = imread(train_pic_path);
 			imshow("输入图片：", input_pic);
 			cvtColor(input_pic, gray_pic, CV_BGR2GRAY);
@@ -350,8 +334,6 @@ void category_by_svm()
 			bowDescriptorExtractor->compute(gray_pic, kp, test);
 
 			int sign = 0;
-			float best_score = -2.0f;
-
 			for (int i = 0; i<category_size; i++)
 			{
 				prediction_category = "未知类型";
@@ -362,17 +344,13 @@ void category_by_svm()
 				if (svm_fs.isOpened())
 				{
 					svm_fs.release();
-					//SVM st_svm;
 					string svm_xml_path = f_path.c_str();
 					Ptr<SVM> st_svm = StatModel::load<SVM>(svm_xml_path);
 					if (sign == 0)
 					{
 						Mat outmat;
 						float score_Value = st_svm->predict(test);
-						float class_Value = st_svm->predict(test);
-						//sign = (score_Value < 0.0f) == (class_Value < 0.0f) ? 1 : -1;
-						sign = (class_Value > 0.0f) ? 1 : -1;
-						if (sign == 1) {
+						if (sign >= 1) {
 							prediction_category = cate_na;
 							break;
 						}
@@ -380,6 +358,7 @@ void category_by_svm()
 					}
 				}
 			}
+			
 			//文件句柄  
 			long   hFile1 = 0;
 			//文件信息  
