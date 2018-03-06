@@ -16,13 +16,14 @@ using namespace cv::xfeatures2d;
 int main()
 {
 	Mat img = imread("D:/1.jpg");
-	
+	//创建surf对象
 	Ptr<SURF> surf = SURF::create(800);
-
+	//创建关键点对象
 	vector<KeyPoint> key;
-
+	//识别关键点
 	surf->detect(img,key);
 	Mat outImg;
+	//绘制关键点
 	drawKeypoints(img, key, outImg);
 
 	imshow("结果",outImg);
