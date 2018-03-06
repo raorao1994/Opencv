@@ -26,7 +26,11 @@ int main()
 	//绘制关键点
 	drawKeypoints(img, key, outImg);
 
-	imshow("结果",outImg);
+	imshow("detect结果",outImg);
+
+	Mat outimg2;
+	surf->compute(img, key, outimg2);
+	imshow("compute结果", outimg2);
 
 	while (waitKey(0)==27)
 	{
