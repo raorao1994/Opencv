@@ -9,7 +9,7 @@
 #define HardExampleNO 1000   //难例个数
 
 
-void train_svm_hog()
+static void train_svm_hog()
 {
 	//HOG检测器，用来计算HOG描述子的
 	//检测窗口(48,48),块尺寸(16,16),块步长(8,8),cell尺寸(8,8),直方图bin个数9 
@@ -93,7 +93,7 @@ void train_svm_hog()
 	if (HardExampleNO > 0)
 	{
 		//HardExample负样本的文件列表 
-		std::ifstream finHardExample("hard_samples_d.txt");
+		std::ifstream finHardExample("hard_samples.txt");
 		//依次读取HardExample负样本图片，生成HOG描述子  
 		for (int num = 0; num < HardExampleNO && getline(finHardExample, ImgName); num++)
 		{
