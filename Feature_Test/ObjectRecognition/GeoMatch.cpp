@@ -10,7 +10,8 @@
 
 GeoMatch::GeoMatch(void)
 {
-	noOfCordinates = 0;  // Initilize  no of cppodinates in model points
+	// Initilize  no of cppodinates in model points
+	noOfCordinates = 0;  
 	modelDefined = false;
 }
 
@@ -76,10 +77,11 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 			magMat[i][j] = MagG;
 
 			if (MagG>MaxGradient)
-				MaxGradient = MagG; // get maximum gradient value for normalizing.
+				// get maximum gradient value for normalizing.
+				MaxGradient = MagG; 
 
 
-									// get closest angle from 0, 45, 90, 135 set
+			// get closest angle from 0, 45, 90, 135 set
 			if ((direction>0 && direction < 22.5) || (direction >157.5 && direction < 202.5) || (direction>337.5 && direction<360))
 				direction = 0;
 			else if ((direction>22.5 && direction < 67.5) || (direction >202.5 && direction <247.5))
