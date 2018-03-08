@@ -23,8 +23,8 @@ int main()
 {
 	//【1】载入素材图
 	//左右相机的图像来源于MiddleBury图片库
-	Mat a = imread("D:/9.jpg", 0);
-	Mat b = imread("D:/12.jpg", 0);
+	Mat a = imread("D:/1.png", 0);
+	Mat b = imread("D:/2.png", 0);
 	//创建方式和OpenCV2中的不一样,并且要加上命名空间xfreatures2d
 	//否则即使配置好了还是显示SURF为未声明的标识符
 	//【2】使用SURF算子检测关键点
@@ -62,7 +62,8 @@ int main()
 	}
 	//【6】绘制从两个图像中匹配出的关键点
 	Mat outimg; //drawMatches这个函数直接画出摆在一起的图
-	drawMatches(a, key1, b, key2, good_matches, outimg, Scalar::all(-1), Scalar::all(-1), vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);  //绘制匹配点    
+	drawMatches(a, key1, b, key2, good_matches, outimg, Scalar::all(-1), Scalar::all(-1),
+		vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);  //绘制匹配点    
 
 
 	imshow("桌面", outimg);

@@ -8,6 +8,8 @@
 using namespace std;
 using namespace cv;
 void Imgs(Mat thresholdimg, vector<Point> ps, Rect mr);
+void cacute(Mat im, vector<Point> ps);
+double Angle(Point cen, Point first, Point second);
 int main()
 {
 	Mat img = imread("img.jpg");
@@ -32,7 +34,7 @@ int main()
 			Rect mr = boundingRect(c);
 			//fillPoly(grayImg, c, Scalar(255, 0, 255));
 			Imgs(distImg, c, mr);
-
+			cacute(src, c);
 			//for (int i = 0; i < c.size(); i++)
 			//{
 			//	circle(src, c[i], 1, Scalar(0, 0, 255), 1);//第五个参数我们调高点，让线更粗
@@ -52,7 +54,7 @@ void Imgs(Mat thresholdimg, vector<Point> ps, Rect mr)
 	//simpleBlobDetector  fitRetangle  fitEllipse
 	Mat img2(thresholdimg, mr);
 	
-	vector<KeyPoint> keypoints;
+	/*vector<KeyPoint> keypoints;
 	SimpleBlobDetector::Params params;
 	params.filterByArea = true;
 	params.minArea = 3000;
@@ -62,9 +64,39 @@ void Imgs(Mat thresholdimg, vector<Point> ps, Rect mr)
 	blobDetector->detect(img2, keypoints);
 	drawKeypoints(img2, keypoints, img2, Scalar(0, 255, 0));
 	imshow("result", img2);
-
-	
-	
-
-	waitKey(3000);
+	waitKey(3000);*/
 }
+
+void cacute(Mat im,vector<Point> ps)
+{
+	int count = ps.size();
+	for (int i = 1; i < count-1; i++)
+	{
+		Point cen = ps[i];
+		Point first = ps[i-1];
+		Point second = ps[i + 1];
+		double angle = Angle(cen, first, second);
+		if (angle<=110) {
+			circle(im, cen, 5, Scalar(0, 255, 255), 2);
+			cout << "第"<<i<<"点的角度为："<< angle << endl;
+		}
+	}
+}
+
+
+double Angle(Point cen, Point first, Point second)
+{
+	const double M_PI = 3.1415926535897;
+	double ma_x = first.x - cen.x;
+	double ma_y = first.y - cen.y;
+	double mb_x = second.x - cen.x;
+	double mb_y = second.y - cen.y;
+	double v1 = (ma_x * mb_x) + (ma_y * mb_y);
+	double ma_val = sqrt(ma_x * ma_x + ma_y * ma_y);
+	double mb_val = sqrt(mb_x * mb_x + mb_y * mb_y);
+	double cosM = v1 / (ma_val * mb_val);
+	double angleAMB = acos(cosM) * 180 / M_PI;
+	return angleAMB;
+}
+
+
