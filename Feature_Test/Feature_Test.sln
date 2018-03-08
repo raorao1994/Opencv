@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test05", "Test05\Test05.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoMatch", "GeoMatch\GeoMatch.vcxproj", "{D4D51EDD-709E-4DFA-994B-D145B809CCF6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ObjectRecognition", "ObjectRecognition\ObjectRecognition.vcxproj", "{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,16 @@ Global
 		{D4D51EDD-709E-4DFA-994B-D145B809CCF6}.Release|x64.ActiveCfg = Release|Win32
 		{D4D51EDD-709E-4DFA-994B-D145B809CCF6}.Release|x86.ActiveCfg = Release|Win32
 		{D4D51EDD-709E-4DFA-994B-D145B809CCF6}.Release|x86.Build.0 = Release|Win32
+		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Debug|x64.ActiveCfg = Debug|x64
+		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Debug|x64.Build.0 = Debug|x64
+		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Debug|x86.ActiveCfg = Debug|Win32
+		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Debug|x86.Build.0 = Debug|Win32
+		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Release|Any CPU.ActiveCfg = Release|Win32
+		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Release|x64.ActiveCfg = Release|x64
+		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Release|x64.Build.0 = Release|x64
+		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Release|x86.ActiveCfg = Release|Win32
+		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
