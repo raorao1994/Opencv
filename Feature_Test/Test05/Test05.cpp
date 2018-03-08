@@ -12,9 +12,9 @@
 #include "opencv2/features2d.hpp"  
 #include "opencv2/calib3d.hpp"  
 #include "opencv2/imgproc.hpp"  
-#include"opencv2/flann.hpp"  
-#include"opencv2/xfeatures2d.hpp"  
-#include"opencv2/ml.hpp"  
+#include "opencv2/flann.hpp"  
+#include "opencv2/xfeatures2d.hpp"  
+#include "opencv2/ml.hpp"  
 
 using namespace cv;
 using namespace std;
@@ -24,125 +24,75 @@ using namespace cv::flann;
 
 int main()
 {
-	//-------------读取模板------------
-	cv::Mat img_object = imread("D:/3.jpg");
-	//-------------图像处理---------
-	cv::Mat img_scene = imread("D:/2.jpg");
+	Mat image01 = imread("1.jpg");
+	Mat image02 = imread("2.jpg");
+	Mat image1, image2;
+	image1 = image01.clone();
+	image2 = image02.clone();
 
-	/*
-	// 检测surf特征点
-	int minHessian = 400;
-	OrbDescriptorExtractor detector(minHessian);
+	//提取特征点    
+	Ptr<SurfFeatureDetector> surfDetector=SurfFeatureDetector::create(800);  //hessianThreshold,海塞矩阵阈值，并不是限定特征点的个数   
+	vector<KeyPoint> keyPoint1, keyPoint2;
+	surfDetector->detect(image1, keyPoint1);
+	surfDetector->detect(image2, keyPoint2);
 
-	std::vector<KeyPoint> keypoints_1, keypoints_2;
-	detector.detect(img_1, keypoints_1);
-	detector.detect(img_2, keypoints_2);
-	//-- Step 2: Calculate descriptors (feature vectors)
-	OrbDescriptorExtractor extractor;
-	Mat descriptors_1, descriptors_2;
-	extractor.compute(img_1, keypoints_1, descriptors_1);
-	extractor.compute(img_2, keypoints_2, descriptors_2);
+	//绘制特征点    
+	drawKeypoints(image1, keyPoint1, image1, Scalar::all(-1));
+	drawKeypoints(image2, keyPoint2, image2, Scalar::all(-1), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+	imshow("KeyPoints of image1", image1);
+	imshow("KeyPoints of image2", image2);
 
-	//-- Step 3: Matching descriptor vectors with a brute force matcher
-	BFMatcher matcher(NORM_L2);
-	std::vector< DMatch > matches;
-	matcher.match(descriptors_1, descriptors_2, matches);
+	//特征点描述，为下边的特征点匹配做准备    
+	Ptr<SurfDescriptorExtractor> SurfDescriptor = SurfDescriptorExtractor::create();
+	Mat imageDesc1, imageDesc2;
+	SurfDescriptor->compute(image1, keyPoint1, imageDesc1);
+	SurfDescriptor->compute(image2, keyPoint2, imageDesc2);
 
-	//-- Draw matches
-	Mat img_matches;
-	drawMatches(img_1, keypoints_1, img_2, keypoints_2, matches, img_matches);*/
+	//归一化并显示出来描述子  
+	Mat imageDescShow1;
+	Mat imageDescShow2;
+	normalize(imageDesc1, imageDescShow1, 0, 255, CV_MINMAX);
+	normalize(imageDesc2, imageDescShow2, 0, 255, CV_MINMAX);
+	convertScaleAbs(imageDescShow1, imageDescShow1);
+	convertScaleAbs(imageDescShow2, imageDescShow2);
+	imshow("描述子1", imageDescShow1);
+	imshow("描述子2", imageDescShow2);
 
-	// 读取数据
-	//cv::Mat img_object = cv::imread("doll01.jpg");
-	//cv::Mat img_scene = cv::imread("doll012.jpg");
-	if (!img_object.data || !img_scene.data) {
-		cout << "Error reading images." << endl;
-		return 0;
+	//特征点匹配并显示匹配结果    
+	//BruteForceMatcher<L2<float>> matcher;    
+	FlannBasedMatcher matcher;
+	vector<DMatch> matchePoints;
+	matcher.match(imageDesc1, imageDesc2, matchePoints, Mat());
+
+	//特征点排序并输出  
+	cout << "特征点排序前距离：" << endl;
+	for (int i = 0; i<matchePoints.size(); i++) //输出特征点按距离排序前内容  
+	{
+		cout << matchePoints[i].distance << endl;
+	}
+	cout << endl << endl;
+	cout << "特征点sort排序后距离：" << endl;
+	sort(matchePoints.begin(), matchePoints.end()); //按距离从小到大排序  
+	for (int i = 0; i<matchePoints.size(); i++)//输出特征点按距离排序前后内容  
+	{
+		cout << matchePoints[i].distance << endl;
 	}
 
-	// 构建特征检测器和描述子提取器
-	Ptr<SURF> detector = SURF::create(800);
-	Ptr<SURF> descriptor = SURF::create();
-
-	// 检测特征点
-	vector<KeyPoint> kp_object, kp_scene;
-	detector->detect(img_object, kp_object);
-	detector->detect(img_scene, kp_scene);
-
-	// 计算描述子
-	Mat desp_object, desp_scene;
-	descriptor->compute(img_object, kp_object, desp_object);
-	descriptor->compute(img_scene, kp_scene, desp_scene);
-
-	/*
-	if (desp_object.type() != CV_32F) {
-	desp_object.convertTo(desp_object, CV_32F);
+	//提取强特征点  
+	//获取排在前N个的最优匹配结果  
+	vector<DMatch> goodMatchePoints;
+	for (int i = 0; i<10; i++)
+	{
+		goodMatchePoints.push_back(matchePoints[i]);
 	}
 
-	if (desp_scene.type() != CV_32F) {
-	desp_scene.convertTo(desp_scene, CV_32F);
-	}
-	*/
-
-	// 匹配描述子
-	vector<DMatch> matches;
-	BFMatcher matcher;
-	//FlannBasedMatcher matcher(new LshIndexParams(20, 10, 2));
-	//matcher.match(desp_object, desp_scene, matches);
-	matcher.match(desp_object, desp_scene, matches);
-	//cout << "Find total " << matches.size() << " matches." << endl;
-
-	// 筛选匹配
-	//double min_dist = 100000;
-	//for (int i = 0; i < matches.size(); i++) {
-	//	float a = matches[i].distance;
-	//	if (a < min_dist) {
-	//		min_dist = matches[i].distance;
-	//	}
-	//}
-
-	//vector<cv::DMatch> good_matches;
-	//for (int i = 0; i < matches.size(); i++) {
-	//
-	//	if (matches[i].distance < 3 * min_dist) {
-	//		good_matches.push_back(matches[i]);
-	//	}
-	//}
-
-	// 显示匹配
-	//cout << "Good matches=" << matches.size() << endl;
-	Mat img_matches;
-	drawMatches(img_object, kp_object, img_scene, kp_scene, matches, img_matches);
-
-	// 定位目标
-	vector<Point2f> obj_points;
-	vector<Point2f> scene;
-
-	for (int i = 0; i < matches.size(); i++) {
-		obj_points.push_back(kp_object[matches[i].queryIdx].pt);
-		scene.push_back(kp_scene[matches[i].trainIdx].pt);
-	}
-	Mat H = findHomography(obj_points, scene, CV_RANSAC);
-
-
-	vector<Point2f> obj_corners(4);
-	vector<Point2f> scene_corners(4);
-	obj_corners[0] = Point(0, 0);
-	obj_corners[1] = Point(img_object.cols, 0);
-	obj_corners[2] = Point(img_object.cols, img_object.rows);
-	obj_corners[3] = Point(0, img_object.rows);
-
-	perspectiveTransform(obj_corners, scene_corners, H);
-
-	line(img_matches, scene_corners[0] + Point2f(img_object.cols, 0), scene_corners[1] + Point2f(img_object.cols, 0), Scalar(0, 255, 0), 4);
-	line(img_matches, scene_corners[1] + Point2f(img_object.cols, 0), scene_corners[2] + Point2f(img_object.cols, 0), Scalar(0, 255, 0), 4);
-	line(img_matches, scene_corners[2] + Point2f(img_object.cols, 0), scene_corners[3] + Point2f(img_object.cols, 0), Scalar(0, 255, 0), 4);
-	line(img_matches, scene_corners[3] + Point2f(img_object.cols, 0), scene_corners[0] + Point2f(img_object.cols, 0), Scalar(0, 255, 0), 4);
-
-	imshow("结果", img_matches);
-	cvWaitKey(0);
+	//绘制最优匹配点  
+	Mat imageOutput;
+	drawMatches(image01, keyPoint1, image02, keyPoint2, goodMatchePoints, imageOutput, Scalar::all(-1),
+		Scalar::all(-1), vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+	imwrite("ss.jpg", imageOutput);
+	imshow("Mathch Points", imageOutput);
+	waitKey();
 	return 0;
-	//Mat dstSize;
-	//resize(img_matches, dstSize, Size(2 * h, w));
 }
 
