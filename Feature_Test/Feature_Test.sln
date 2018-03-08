@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoMatch", "GeoMatch\GeoMat
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ObjectRecognition", "ObjectRecognition\ObjectRecognition.vcxproj", "{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "基于分水岭的图像分割", "基于分水岭的图像分割\基于分水岭的图像分割.vcxproj", "{FE38BA16-9353-469A-BB80-57C99894C64A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,16 @@ Global
 		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Release|x64.Build.0 = Release|x64
 		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Release|x86.ActiveCfg = Release|Win32
 		{BBBAF0A6-4B7F-47CF-A969-687D917A7CC6}.Release|x86.Build.0 = Release|Win32
+		{FE38BA16-9353-469A-BB80-57C99894C64A}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{FE38BA16-9353-469A-BB80-57C99894C64A}.Debug|x64.ActiveCfg = Debug|x64
+		{FE38BA16-9353-469A-BB80-57C99894C64A}.Debug|x64.Build.0 = Debug|x64
+		{FE38BA16-9353-469A-BB80-57C99894C64A}.Debug|x86.ActiveCfg = Debug|Win32
+		{FE38BA16-9353-469A-BB80-57C99894C64A}.Debug|x86.Build.0 = Debug|Win32
+		{FE38BA16-9353-469A-BB80-57C99894C64A}.Release|Any CPU.ActiveCfg = Release|Win32
+		{FE38BA16-9353-469A-BB80-57C99894C64A}.Release|x64.ActiveCfg = Release|x64
+		{FE38BA16-9353-469A-BB80-57C99894C64A}.Release|x64.Build.0 = Release|x64
+		{FE38BA16-9353-469A-BB80-57C99894C64A}.Release|x86.ActiveCfg = Release|Win32
+		{FE38BA16-9353-469A-BB80-57C99894C64A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
