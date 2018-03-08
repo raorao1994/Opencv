@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	param = "Template.jpg";
 	if (param == NULL)
 	{
-		cout << "ERROR: Template image argument missing";
+		cout << "ERROR: 模版图像为空";
 		WrongUsage();
 		return -1;
 	}
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 	IplImage* templateImage = cvLoadImage(param, -1);
 	if (templateImage == NULL)
 	{
-		cout << "\nERROR: Could not load Template Image.\n" << param;
+		cout << "\nERROR: 模版图像加载失败\n" << param;
 		return 0;
 	}
 
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 	param = "Search3.jpg";
 	if (param == NULL)
 	{
-		cout << "ERROR: source image argument missing";
+		cout << "ERROR: 待检索图像为空";
 		WrongUsage();
 		return -1;
 	}
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 	IplImage* searchImage = cvLoadImage(param, -1);
 	if (searchImage == NULL)
 	{
-		cout << "\nERROR: Could not load Search Image." << param;
+		cout << "\nERROR: 待检索图像加载失败" << param;
 		return 0;
 	}
 
@@ -93,16 +93,16 @@ int main(int argc, char *argv[])
 	{
 		cvCopy(templateImage, grayTemplateImg);
 	}
-	cout << "\n Edge Based Template Matching Program\n";
+	cout << "\n 基于边缘的模板匹配程序\n";
 	cout << " ------------------------------------\n";
 
 	if (!GM.CreateGeoMatchModel(grayTemplateImg, lowThreshold, highThreashold))
 	{
-		cout << "ERROR: could not create model...";
+		cout << "ERROR: 无法创建识别模型";
 		return 0;
 	}
 	GM.DrawContours(templateImage, CV_RGB(255, 0, 0), 1);
-	cout << " Shape model created.." << "with  Low Threshold = " << lowThreshold << " High Threshold = " << highThreashold << endl;
+	cout << " 识别模型创建成功" << "低阈值 = " << lowThreshold << " 高阈值 = " << highThreashold << endl;
 	CvSize searchSize = cvSize(searchImage->width, searchImage->height);
 	IplImage* graySearchImg = cvCreateImage(searchSize, IPL_DEPTH_8U, 1);
 
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 	{
 		cvCopy(searchImage, graySearchImg);
 	}
-	cout << " Finding Shape Model.." << " Minumum Score = " << minScore << " Greediness = " << greediness << "\n\n";
+	cout << " 找到物体" << " Minumum分数 = " << minScore << " Greediness = " << greediness << "\n\n";
 	cout << " ------------------------------------\n";
 	clock_t start_time1 = clock();
 	score = GM.FindGeoMatchModel(graySearchImg, minScore, greediness, &result);
@@ -122,14 +122,14 @@ int main(int argc, char *argv[])
 
 	if (score>minScore) // if score is atleast 0.4
 	{
-		cout << " Found at [" << result.x << ", " << result.y << "]\n Score = " << score << "\n Searching Time = " << total_time * 1000 << "ms";
+		cout << " 识别到的图像位置为： [" << result.x << ", " << result.y << "]\n Score = " << score << "\n 识别时间 = " << total_time * 1000 << "ms";
 		GM.DrawContours(searchImage, result, CV_RGB(0, 255, 0), 1);
 	}
 	else
-		cout << " Object Not found";
+		cout << " 物体未找到";
 
 	cout << "\n ------------------------------------\n\n";
-	cout << "\n Press any key to exit!";
+	cout << "\n 请按下任意案件进行下一步!";
 
 	//Display result
 	cvNamedWindow("Template", CV_WINDOW_AUTOSIZE);
