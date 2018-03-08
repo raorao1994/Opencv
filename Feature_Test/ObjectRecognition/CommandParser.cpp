@@ -1,15 +1,8 @@
 //***********************************************************************
-// Project		    : GeoMatch
-// Author           : Shiju P K
-// Email			: shijupk@gmail.com
-// Created          : 03-07-2010
-//
 // File Name		: CommandParser.cpp
-// Last Modified By : Shiju P K
-// Last Modified On : 03-07-2010
-// Description      : class to implement comand line parsing
-//
-// Copyright        : (c) . All rights reserved.
+// Last Modified By : raorao
+// Last Modified On : 03-08-2018
+// Description      : 读取命令行数据
 //***********************************************************************
 #include "StdAfx.h"
 #include "string.h"

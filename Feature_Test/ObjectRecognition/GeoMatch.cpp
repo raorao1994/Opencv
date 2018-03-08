@@ -1,27 +1,18 @@
 //***********************************************************************
-// Project		    : GeoMatch
-// Author           : Shiju P K
-// Email			: shijupk@gmail.com
-// Created          : 10-01-2010
-//
-// File Name		: GeoMatch.cpp
-// Last Modified By : Shiju P K
-// Last Modified On : 13-07-2010
-// Description      : class to implement edge based template matching
-//
-// Copyright        : (c) . All rights reserved.
+// File Name		: GeoMatch.h
+// Last Modified By : raorao
+// Last Modified On : 03-08-2018
+// Description      : 实现基于边缘的模板匹配
 //***********************************************************************
 
 #include "StdAfx.h"
 #include "GeoMatch.h"
-
 
 GeoMatch::GeoMatch(void)
 {
 	noOfCordinates = 0;  // Initilize  no of cppodinates in model points
 	modelDefined = false;
 }
-
 
 int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, double minContrast)
 {
@@ -53,7 +44,7 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 	edgeDerivativeY = new double[modelWidth *modelHeight];			////Allocate memory for edge Y derivative for selected points
 
 
-																	// Calculate gradient of Template
+	// Calculate gradient of Template
 	gx = cvCreateMat(Ssize.height, Ssize.width, CV_16SC1);		//create Matrix to store X derivative
 	gy = cvCreateMat(Ssize.height, Ssize.width, CV_16SC1);		//create Matrix to store Y derivative
 	cvSobel(src, gx, 1, 0, 3);		//gradient in X direction			

@@ -1,15 +1,8 @@
 //***********************************************************************
-// Project		    : GeoMatch
-// Author           : Shiju P K
-// Email			: shijupk@gmail.com
-// Created          : 10-01-2010
-//
 // File Name		: GeoMatch.h
-// Last Modified By : Shiju P K
-// Last Modified On : 13-07-2010
-// Description      : class to implement edge based template matching
-//
-// Copyright        : (c) . All rights reserved.
+// Last Modified By : raorao
+// Last Modified On : 03-08-2018
+// Description      : 实现基于边缘的模板匹配
 //***********************************************************************
 
 #pragma once
