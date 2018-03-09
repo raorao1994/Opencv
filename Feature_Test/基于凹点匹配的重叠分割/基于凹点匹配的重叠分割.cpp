@@ -78,6 +78,7 @@ void Imgs(Mat thresholdimg, vector<Point> ps, Rect mr)
 	}
 	for (int i = 0; i < indexList.size(); i++)
 	{
+		circle(src, ps[indexList[i]],5, Scalar(255, 255, 100), 2);
 		cout << "index¼¯ºÏ" << indexList[i] << endl << endl;
 	}
 }
