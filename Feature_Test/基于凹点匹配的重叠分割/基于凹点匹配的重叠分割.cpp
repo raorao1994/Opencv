@@ -64,12 +64,21 @@ void Imgs(Mat thresholdimg, vector<Point> ps, Rect mr)
 		}
 	}
 	//求边缘分割点index索引
+	vector<int> indexList;
 	for (int i = 0; i < pt.size(); i++)
 	{
 		for (int j = 0; j < ps.size(); j++)
 		{
-			int xycout = (pt[i].x - ps[j].x);
+			int _xycout = abs((pt[i].x - ps[j].x));
+			if (_xycout <= 0) {
+				indexList.push_back(j);
+				break;
+			}
 		}
+	}
+	for (int i = 0; i < indexList.size(); i++)
+	{
+		cout << "index集合" << indexList[i] << endl << endl;
 	}
 }
 /**
