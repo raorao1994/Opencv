@@ -14,7 +14,7 @@ Mat src;
 Mat searchConcaveRegions(vector<vector<Point> >hull, Mat &src);
 vector<Point> searchConcavePoint(Mat &src);
 Mat searchConcaveRegion(vector<Point>contours, Mat &src);
-void Imgs(Mat thresholdimg, vector<Point> ps, Rect mr);
+vector<vector<Point>> Imgs(Mat thresholdimg, vector<Point> ps, Rect mr);
 
 int main()
 {
@@ -34,9 +34,10 @@ int main()
 		int PointCount = contours[i].size();
 		vector<Point> c = contours[i];
 		if (PointCount > 50) {
-			drawContours(src, contours, i, Scalar(0, 255, 0), 3);
+			//drawContours(src, contours, i, Scalar(0, 255, 0), 3);
 			Rect mr = boundingRect(c);
-			Imgs(distImg, c, mr);
+			vector<vector<Point>> cc=Imgs(distImg, c, mr);
+			drawContours(src, cc, -1, Scalar(0, 255, 0), 3);
 		}
 	}
 	imshow("结果", src);
@@ -45,9 +46,8 @@ int main()
 }
 
 //提取边缘，并重新处理
-void Imgs(Mat thresholdimg, vector<Point> ps, Rect mr)
+vector<vector<Point>> Imgs(Mat thresholdimg, vector<Point> ps, Rect mr)
 {
-	//simpleBlobDetector  fitRetangle  fitEllipse
 	Mat img2(thresholdimg, mr);
 	//求凹面
 	Mat aotu = searchConcaveRegion(ps, thresholdimg);
@@ -63,24 +63,62 @@ void Imgs(Mat thresholdimg, vector<Point> ps, Rect mr)
 			line(src, pt[i], pt[i + 1], Scalar(255, 0, 0), 2, 8, 0);
 		}
 	}
-	//求边缘分割点index索引
+	//按循序找到边缘分割点的index索引
 	vector<int> indexList;
+	int MaxIndex = 0, MinIndex= ps.size();
 	for (int i = 0; i < pt.size(); i++)
 	{
 		for (int j = 0; j < ps.size(); j++)
 		{
-			int _xycout = abs((pt[i].x - ps[j].x));
-			if (_xycout <= 0) {
+			int _xycout = abs((pt[i].x - ps[j].x))+ abs((pt[i].y - ps[j].y));
+			if (_xycout <= 1) {
 				indexList.push_back(j);
+				if (j > MaxIndex) MaxIndex = j;
+				if (j < MinIndex) MinIndex = j;
 				break;
 			}
 		}
 	}
-	for (int i = 0; i < indexList.size(); i++)
+	//最终得到的分割结果
+	vector<vector<Point>> PointList;
+	//遍历分割点对应的索引，并分割边缘点
+	for (int i = 0; i < indexList.size(); i+=2)
 	{
-		circle(src, ps[indexList[i]],5, Scalar(255, 255, 100), 2);
-		cout << "index集合" << indexList[i] << endl << endl;
+		int index0 = indexList[i];//小
+		int index1 = indexList[i + 1];//大
+		if (index0 > index1) {
+			index0 = index1;
+			index1 = indexList[i];
+		}
+		//1、分割点横跨0点的时候
+		vector<Point> _p;
+		if (index0 == MinIndex&&index1 == MaxIndex)
+		{
+			for (index1; index1 < ps.size()+index0; index1++)
+			{
+				int _index = index1;
+				if (_index >= ps.size())
+					_index = _index - ps.size();
+				_p.push_back(ps[_index]);
+				ps[index0] = _p[0];
+			}
+			PointList.push_back(_p);
+			continue;
+		}
+		//2、分割点不横跨0点的时候
+		else
+		{
+			for (index0; index0 < index1; index0++)
+			{
+				_p.push_back(ps[index0]);
+				ps[index0] = ps[index1];
+			}
+			PointList.push_back(_p);
+			continue;
+		}
 	}
+	PointList.push_back(ps);
+	return PointList;
 }
 /**
 * @brief searchConcaveRegion 寻找凹区域
