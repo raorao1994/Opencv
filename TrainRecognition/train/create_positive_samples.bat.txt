@@ -1,0 +1,9 @@
+opencv_createsamplesd.exe -info posstive_samples.txt -vec positive_samples.vec -num 3000 -w 40 -h 40
+
+pause
+
+字段说明如下：
+-info 字段填写正样本描述文件 
+-vec 用于保存制作的正样本 
+-num 制定正样本的数目 
+-w 和-h分别指定正样本的宽和高。

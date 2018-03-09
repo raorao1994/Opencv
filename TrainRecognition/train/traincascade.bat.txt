@@ -1,0 +1,32 @@
+opencv_traincascade.exe -data xml -vec positive_samples.vec -bg negative_samples.txt -numPos 1000 -numNeg 2000
+-numStage 15 -w 140 -h 40 -minHitRate -0.995 -maxFalseAlarmRate 0.5 -mode ALL -featureType HAAR
+
+pause
+
+字段说明如下：
+
+-data：指定保存训练结果的文件夹；
+
+-vec:指定正样本集；
+
+-bg:指定负样本的描述文件夹；
+
+-numPos：指定每一级参与训练的正样本的数目（要小于正样本总数）；
+
+-numNeg:指定每一级参与训练的负样本的数目（可以大于负样本图片的总数）；
+
+-numStage:训练的级数；
+
+-w:正样本的宽；
+
+-h:正样本的高；
+
+-minHitRate:每一级需要达到的命中率（一般取值0.95-0.995）；
+
+-maxFalseAlarmRate:每一级所允许的最大误检率；
+
+-mode:使用Haar-like特征时使用，可选BASIC、CORE或者ALL；
+
+另外，还可指定以下字段：
+
+-featureType:可选HAAR或LBP，默认为HAAR;
