@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "连接边缘分割", "连�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "基于凹点匹配的重叠分割", "基于凹点匹配的重叠分割\基于凹点匹配的重叠分割.vcxproj", "{24879783-2EB5-4270-A719-FE6CBCFD191F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "基于边缘的特征识别", "基于边缘的特征识别\基于边缘的特征识别.vcxproj", "{ABE21DA6-E473-4790-B80A-316FC4BD820A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -155,6 +157,16 @@ Global
 		{24879783-2EB5-4270-A719-FE6CBCFD191F}.Release|x64.Build.0 = Release|x64
 		{24879783-2EB5-4270-A719-FE6CBCFD191F}.Release|x86.ActiveCfg = Release|Win32
 		{24879783-2EB5-4270-A719-FE6CBCFD191F}.Release|x86.Build.0 = Release|Win32
+		{ABE21DA6-E473-4790-B80A-316FC4BD820A}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{ABE21DA6-E473-4790-B80A-316FC4BD820A}.Debug|x64.ActiveCfg = Debug|x64
+		{ABE21DA6-E473-4790-B80A-316FC4BD820A}.Debug|x64.Build.0 = Debug|x64
+		{ABE21DA6-E473-4790-B80A-316FC4BD820A}.Debug|x86.ActiveCfg = Debug|Win32
+		{ABE21DA6-E473-4790-B80A-316FC4BD820A}.Debug|x86.Build.0 = Debug|Win32
+		{ABE21DA6-E473-4790-B80A-316FC4BD820A}.Release|Any CPU.ActiveCfg = Release|Win32
+		{ABE21DA6-E473-4790-B80A-316FC4BD820A}.Release|x64.ActiveCfg = Release|x64
+		{ABE21DA6-E473-4790-B80A-316FC4BD820A}.Release|x64.Build.0 = Release|x64
+		{ABE21DA6-E473-4790-B80A-316FC4BD820A}.Release|x86.ActiveCfg = Release|Win32
+		{ABE21DA6-E473-4790-B80A-316FC4BD820A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
