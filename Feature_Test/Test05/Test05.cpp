@@ -24,8 +24,8 @@ using namespace cv::flann;
 
 int main()
 {
-	Mat image01 = imread("1.jpg");
-	Mat image02 = imread("2.jpg");
+	Mat image01 = imread("D:/1.jpg");
+	Mat image02 = imread("D:/2.jpg");
 	Mat image1, image2;
 	image1 = image01.clone();
 	image2 = image02.clone();

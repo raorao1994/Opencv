@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 	}
 
 	param = cp.GetParameter("-s");
-	param = "Search3.jpg";
+	param = "Search1.jpg";
 	if (param == NULL)
 	{
 		cout << "ERROR: 待检索图像为空";
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 		cout << "ERROR: 无法创建识别模型";
 		return 0;
 	}
-	GM.DrawContours(templateImage, CV_RGB(255, 0, 0), 1);
+	GM.DrawContours(templateImage, CV_RGB(255, 0, 0), 4);
 	cout << " 识别模型创建成功" << "低阈值 = " << lowThreshold << " 高阈值 = " << highThreashold << endl;
 	CvSize searchSize = cvSize(searchImage->width, searchImage->height);
 	IplImage* graySearchImg = cvCreateImage(searchSize, IPL_DEPTH_8U, 1);
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 	if (score>minScore) // if score is atleast 0.4
 	{
 		cout << " 识别到的图像位置为： [" << result.x << ", " << result.y << "]\n Score = " << score << "\n 识别时间 = " << total_time * 1000 << "ms";
-		GM.DrawContours(searchImage, result, CV_RGB(0, 255, 0), 1);
+		GM.DrawContours(searchImage, result, CV_RGB(0, 255, 0), 4);
 	}
 	else
 		cout << " 物体未找到";
