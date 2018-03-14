@@ -1,6 +1,7 @@
 // 凹缺陷_凸缺陷.cpp : 定义控制台应用程序的入口点。
 //http://blog.csdn.net/jjddss/article/details/73548564
-//http://blog.csdn.net/Lu597203933/article/details/14532053
+//http://blog.csdn.net/Lu597203933/article/details/14532053  图像和轮廓的匹配(hu矩)
+//http://blog.csdn.net/keith_bb/article/details/70197104 图像的矩moments
 #include "stdafx.h"
 #include <opencv2/opencv.hpp>
 using namespace std;
