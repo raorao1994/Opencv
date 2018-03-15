@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="Text.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -33,9 +34,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="基于距离的图像分割.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="源.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
