@@ -10,7 +10,7 @@
 
 using namespace std;
 using namespace cv;
-//角度计算
+
 /*
 *Angle 角度计算
 *cen 中间点
@@ -63,7 +63,6 @@ void FindHull(vector<Point> contour,Mat drawing)
 	approxPolyDP(Mat(hull), poly, 1, true);//根据点集，拟合出多边形
 	fillPoly(drawing, Mat(poly), Scalar(255)); // 根据点集，绘制出多边形
 }
-
 //寻找矩
 void FindMoments(vector<Point> contour,Mat drawing)
 {
@@ -76,7 +75,6 @@ void FindMoments(vector<Point> contour,Mat drawing)
 	mc = Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
 	circle(drawing, mc, 5, Scalar(255), 2);
 }
-
 //交点监测
 void cornerShiTomasi(Mat img)
 {
@@ -100,16 +98,34 @@ void cornerShiTomasi(Mat img)
 	}
 	cout << "关键点点数" << corner.size() << endl;
 }
+//特征点
+vector<Point> FindKeyPoint(vector<Point> pList,Mat img)
+{
+	vector<Point> _KeyPointList;
+	for (size_t i = 0; i < pList.size(); i++)
+	{
+		Point cen = pList[i];
+		Point first;
+		Point second;
+		if(i<=0)
+			first = pList[pList.size() - 1];
+		else
+			first = pList[i - 1];
+		if ((i+1) >= pList.size())
+			second = pList[0];
+		else
+			second = pList[i + 1];
+		double angle = Angle(cen, first, second);
+		if (angle > 180)
+		{
+			_KeyPointList.push_back(cen);
+			circle(img, cen, 5, Scalar(255));
+		}	
+	}
+	return _KeyPointList;
+}
 int main()
 {
-
-	Point c(100,100);
-	Point f(0, 0);
-	Point d(110, 100);
-	double a=Angle(c, f, d);
-	cout << "角度是=" << a << endl;
-
-
 	Mat img = imread("thresholdimg.jpg");
 	Mat img_gray;
 	cvtColor(img, img_gray, CV_BGR2GRAY);
@@ -124,23 +140,17 @@ int main()
 
 		double area = abs(contourArea(contours[i]));
 		if (area < 3600)continue;
-
-		FindHull(contours[i],drawing);
-
+		//FindHull(contours[i],drawing);
 		vector<Point> poly;
 		//对图像轮廓点进行多边形拟合
 		approxPolyDP(Mat(contours[i]), poly, 1, true);//根据点集，拟合出多边形
-		//approxPolyDP(Mat(hull), poly1, 1, true);//根据点集，拟合出多边形
-		vector<vector<Point>> pp; pp.push_back(poly);
-		//drawContours(drawing, pp, -1, Scalar(255), 2);  //绘制
-
-		//fillConvexPoly(drawing, Mat(poly), Scalar(255));// 根据点集，绘制并填充出多边形
-		//fillPoly(drawing, Mat(poly), Scalar(255)); // 根据点集，绘制出多边形
-		//fillPoly(drawing, Mat(poly1), Scalar(255)); // 根据点集，绘制出多边形
+		vector<Point> keyPoint=FindKeyPoint(poly, drawing);
+		fillPoly(drawing, Mat(poly), Scalar(255)); // 根据点集，绘制出多边形
+		vector<vector<Point>> _a; _a.push_back(poly);
+		drawContours(drawing, _a, -1, Scalar(255));
 		//获取轮廓上的关键点
 		//cvFindDominantPoints()
 		//cornerShiTomasi(drawing);
-		
 	}
 	imshow("result", drawing);
 	waitKey(0);

@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "基于边缘的特征识别
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "凹缺陷_凸缺陷", "凹缺陷_凸缺陷\凹缺陷_凸缺陷.vcxproj", "{FDBCD2A2-B386-430C-93A4-D14D86502E9A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "基于腐蚀的边缘分割", "基于腐蚀的边缘分割\基于腐蚀的边缘分割.vcxproj", "{BDF17F47-85CD-4077-AC34-C3E0912A4228}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -179,6 +181,16 @@ Global
 		{FDBCD2A2-B386-430C-93A4-D14D86502E9A}.Release|x64.Build.0 = Release|x64
 		{FDBCD2A2-B386-430C-93A4-D14D86502E9A}.Release|x86.ActiveCfg = Release|Win32
 		{FDBCD2A2-B386-430C-93A4-D14D86502E9A}.Release|x86.Build.0 = Release|Win32
+		{BDF17F47-85CD-4077-AC34-C3E0912A4228}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{BDF17F47-85CD-4077-AC34-C3E0912A4228}.Debug|x64.ActiveCfg = Debug|x64
+		{BDF17F47-85CD-4077-AC34-C3E0912A4228}.Debug|x64.Build.0 = Debug|x64
+		{BDF17F47-85CD-4077-AC34-C3E0912A4228}.Debug|x86.ActiveCfg = Debug|Win32
+		{BDF17F47-85CD-4077-AC34-C3E0912A4228}.Debug|x86.Build.0 = Debug|Win32
+		{BDF17F47-85CD-4077-AC34-C3E0912A4228}.Release|Any CPU.ActiveCfg = Release|Win32
+		{BDF17F47-85CD-4077-AC34-C3E0912A4228}.Release|x64.ActiveCfg = Release|x64
+		{BDF17F47-85CD-4077-AC34-C3E0912A4228}.Release|x64.Build.0 = Release|x64
+		{BDF17F47-85CD-4077-AC34-C3E0912A4228}.Release|x86.ActiveCfg = Release|Win32
+		{BDF17F47-85CD-4077-AC34-C3E0912A4228}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
