@@ -75,7 +75,7 @@ void FindMoments(vector<Point> contour,Mat drawing)
 	mc = Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
 	circle(drawing, mc, 5, Scalar(255), 2);
 }
-//交点监测
+//角点监测
 void cornerShiTomasi(Mat img)
 {
 	//输入参数：
@@ -115,20 +115,32 @@ vector<Point> FindKeyPoint(vector<Point> pList,Mat img)
 			second = pList[0];
 		else
 			second = pList[i + 1];
-		double angle = Angle(cen, first, second);
-		if (angle > 180)
+		//判断节点是否重合
+		/*if ((second.x == cen.x && cen.y == second.y) || (first.x == cen.x && cen.y == first.y))
 		{
 			_KeyPointList.push_back(cen);
 			circle(img, cen, 5, Scalar(255));
-		}	
+			continue;
+		}*/
+		double angle = Angle(cen, first, second);
+		if (angle > 200)
+		{
+			_KeyPointList.push_back(cen);
+			circle(img, cen, 5, Scalar(255));
+		}
+		line(img, cen, Point(cen.x+10,cen.y+10), Scalar(255));
 	}
 	return _KeyPointList;
 }
+
 int main()
 {
 	Mat img = imread("thresholdimg.jpg");
 	Mat img_gray;
 	cvtColor(img, img_gray, CV_BGR2GRAY);
+	//先进行canny
+	Mat edges;
+	Canny(img_gray, edges, 200, 250);
 	Mat img_threshold;
 	threshold(img_gray, img_threshold, 100, 255, THRESH_BINARY);
 	vector<vector<Point>> contours;
@@ -137,7 +149,6 @@ int main()
 	
 	for (size_t i = 0; i < contours.size(); i++)
 	{
-
 		double area = abs(contourArea(contours[i]));
 		if (area < 3600)continue;
 		//FindHull(contours[i],drawing);

@@ -32,5 +32,8 @@
     <ClCompile Include="基于凹点匹配的重叠分割.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="源代码第一稿.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
