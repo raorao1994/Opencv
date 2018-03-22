@@ -99,7 +99,7 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 	}
 
 	count = 0; // init count
-			   // non maximum suppression
+	// non maximum suppression
 	double leftPixel, rightPixel;
 
 	for (i = 1; i < Ssize.height - 1; i++)
@@ -134,8 +134,6 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 			count++;
 		}
 	}
-
-
 	int RSum = 0, CSum = 0;
 	int curX, curY;
 	int flag = 1;
@@ -152,7 +150,7 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 			MagG = sqrt(fdx*fdx + fdy*fdy); //Magnitude = Sqrt(gx^2 +gy^2)
 			DirG = cvFastArctan((float)fdy, (float)fdx);	 //Direction = tan(y/x)
 
-															 ////((uchar*)(imgGDir->imageData + imgGDir->widthStep*i))[j]= MagG;
+			////((uchar*)(imgGDir->imageData + imgGDir->widthStep*i))[j]= MagG;
 			flag = 1;
 			if (((double)((nmsEdges->data.ptr + nmsEdges->step*i))[j]) < maxContrast)
 			{
@@ -210,7 +208,7 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 	centerOfGravity.x = RSum / noOfCordinates; // center of gravity
 	centerOfGravity.y = CSum / noOfCordinates;	// center of gravity
 
-												// change coordinates to reflect center of gravity
+	// change coordinates to reflect center of gravity
 	for (int m = 0; m<noOfCordinates; m++)
 	{
 		int temp;
@@ -231,16 +229,13 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 	cvReleaseMat(&nmsEdges);
 
 	ReleaseDoubleMatrix(magMat, Ssize.height);
-
 	modelDefined = true;
 	return 1;
 }
 
-
 double GeoMatch::FindGeoMatchModel(const void* srcarr, double minScore, double greediness, CvPoint *resultPoint)
 {
 	CvMat *Sdx = 0, *Sdy = 0;
-
 	double resultScore = 0;
 	double partialSum = 0;
 	double sumOfCoords = 0;
@@ -274,7 +269,7 @@ double GeoMatch::FindGeoMatchModel(const void* srcarr, double minScore, double g
 	cvSobel(src, Sdx, 1, 0, 3);  // find X derivatives
 	cvSobel(src, Sdy, 0, 1, 3); // find Y derivatives
 
-								// stoping criterias to search for model
+	// stoping criterias to search for model
 	double normMinScore = minScore / noOfCordinates; // precompute minumum score 
 	double normGreediness = ((1 - greediness * minScore) / (1 - greediness)) / noOfCordinates; // precompute greedniness 
 
