@@ -11,17 +11,17 @@ using namespace std;
 using namespace cv;
 
 int  convexArea=1000;//凸面边缘面积阀值
-int AmaxArea1 = 3600;//计算分割下的边缘面积阈值
+int AmaxArea = 3600;//计算分割下的边缘面积阈值
 int Pixthreshold = 6;//像素点距离阈值
 Mat src;
 vector<Point> searchConcavePoint(Mat &src);
 Mat searchConcaveRegion(vector<Point>contours, Mat &src);
 vector<vector<Point>> Overlapping_Edge_Segmentation(Mat thresholdimg, vector<Point> ps, Rect mr);
-
+vector<vector<Point>> RegionSort(vector<vector<Point>> contours);
 int main()
 {
 	Mat img = imread("img.jpg");
-	src = imread("thresholdimg.jpg");
+	src = imread("thresholdimg1.jpg");
 	//GaussianBlur(src, src, Size(3, 3),CV_8U);
 	Mat grayImg;
 	cvtColor(src, grayImg, CV_BGR2GRAY);
@@ -31,7 +31,7 @@ int main()
 
 	vector<vector<Point>> contours;
 	//寻找轮廓，省去层次结构，检索外部轮廓，轮廓拐点近似
-	findContours(distImg, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+	findContours(distImg, contours, RETR_LIST, CHAIN_APPROX_SIMPLE);//RETR_LIST RETR_EXTERNAL
 	for (size_t i = 0; i < contours.size(); i++) {
 		double area = abs(contourArea(contours[i]));
 		if (area < 3500)continue;
@@ -73,6 +73,10 @@ Mat searchConcaveRegion(vector<Point>contours, Mat &src)
 	Mat element = getStructuringElement(MORPH_RECT, Size(5, 5));
 	erode(drawing, drawing, element);
 	imshow("凸面",drawing);
+	//释放内存资源
+	poly.capacity();
+	_contours.capacity();
+	element.release();
 	return drawing;
 }
 /**
@@ -92,22 +96,14 @@ vector<Point> searchConcavePoint(Mat &src)
 	//凹区域少于2要退出    
 	if (contour.size()<2)
 		return ConcavePoint;
-
-	vector<vector<Point> > _contours;
-	for (int i = 0; i < contour.size(); i++)
-	{
-		double area = abs(contourArea(contour[i]));
-		if (area < convexArea) continue;
-		_contours.push_back(contour[i]);
-	}
-	cout << "凸面个数" << _contours.size() << endl;
-	//按照轮廓面积大小排序    
-	std::sort(_contours.begin(), _contours.end(), [](const std::vector<Point> &s1,
+	//按照轮廓面积大小排序 
+	vector<vector<Point>> _contours=RegionSort(contour);
+	/*sort(_contours.begin(), _contours.end(), [](const vector<Point> &s1,
 		const std::vector<Point> &s2) {
 		double a1 = contourArea(s1);
 		double a2 = contourArea(s2);
 		return a1>a2;
-	});
+	});*/
 	//遍历凸面，计算最小点
 	for (int a = 0; a < _contours.size(); a++)
 	{
@@ -232,7 +228,7 @@ vector<vector<Point>> Overlapping_Edge_Segmentation(Mat thresholdimg, vector<Poi
 				_p.push_back(ps[_index]);
 				ps[index0] = _p[0];
 			}
-			if (AmaxArea1 < abs(contourArea(_p)))
+			if (AmaxArea < abs(contourArea(_p)))
 				PointList.push_back(_p);
 			continue;
 		}
@@ -244,13 +240,63 @@ vector<vector<Point>> Overlapping_Edge_Segmentation(Mat thresholdimg, vector<Poi
 				_p.push_back(ps[index0]);
 				ps[index0] = ps[index1];
 			}
-			if (AmaxArea1 < abs(contourArea(_p)))
+			if (AmaxArea < abs(contourArea(_p)))
 				PointList.push_back(_p);
 			continue;
 		}
 	}
-	if (AmaxArea1 < abs(contourArea(ps)))
+	if (AmaxArea < abs(contourArea(ps)))
 		PointList.push_back(ps);
 	return PointList;
+}
+//区域排序
+//根据顺时针方向，对凸面进行排序，并清除面积小的部分
+vector<vector<Point>> RegionSort(vector<vector<Point>> contours)
+{
+	vector<Point3d> xindex;
+	int averageY = 0;
+	//过滤较小的凸面区域，并计算出他的中心点
+	for (int i = 0; i < contours.size(); i++)
+	{
+		double area = abs(contourArea(contours[i]));
+		if (area < convexArea) continue;
+		long x=0,y=0;
+		for (size_t j = 0; j < contours[i].size(); j++)
+		{
+			x += contours[i][j].x;
+			y += contours[i][j].y;
+		}
+		x = x / contours[i].size();
+		y = y / contours[i].size();
+		xindex.push_back(Point3d(x,y,i));
+		averageY += y;
+	}
+	averageY = averageY / xindex.size();
+	//从小到大
+	sort(xindex.begin(), xindex.end(), [](const Point3d &p1,
+		const Point3d &p2) {
+		bool b = false;
+		if (p1.x < p2.x)b = true;
+		if (p1.x == p2.x&&p1.y > p2.y)b = true;
+		return b;
+	});
+	vector<vector<Point>> _contours(xindex.size());
+	int _Maxindex = xindex.size() - 1;
+	int _Minindex = 0;
+	for (int i = 0; i < xindex.size(); i++)
+	{
+		if (xindex[i].y > averageY) 
+		{
+			_contours[_Maxindex] = contours[xindex[i].z];
+			_Maxindex--;
+			
+		}
+		else
+		{
+			_contours[_Minindex] = contours[xindex[i].z];
+			_Minindex++;
+		}
+	}
+	return _contours;
 }
 

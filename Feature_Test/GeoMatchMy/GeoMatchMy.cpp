@@ -1,88 +1,31 @@
-// ObjectRecognition.cpp : 定义控制台应用程序的入口点。
-//基于图像边缘的图像识别算法
+// GeoMatchMy.cpp : 定义控制台应用程序的入口点。
+//
 
 #include "stdafx.h"
 #include <stdio.h> 
 #include <iostream>
 #include <time.h>
-#include "GeoMatch.h"
-#include "CommandParser.h"
+#include "GeoMatch1.h"
 
 using namespace std;
 
-int main(int argc, char *argv[])
+int main()
 {
-	void WrongUsage();
-
-	CommandParser cp(argc, argv); // object to parse command line
-
-	GeoMatch GM;				// object to implent geometric matching	
+	GeoMatch1 GM;				//对象实现几何匹配
 	int lowThreshold = 10;		//deafult value
 	int highThreashold = 100;	//deafult value
 
 	double minScore = 0.7;		//deafult value
-	double greediness = 0.8;		//deafult value
+	double greediness = 0.8;		//0.8 deafult value
 
 	double total_time = 0;
 	double score = 0;
 	CvPoint result;
 
-	//Load Template image 
-	char *param;
-	param = cp.GetParameter("-t");
-	param = "Template.jpg";
-	param = "temp.jpg";
-	if (param == NULL)
-	{
-		cout << "ERROR: 模版图像为空";
-		WrongUsage();
-		return -1;
-	}
-
-	IplImage* templateImage = cvLoadImage(param, -1);
-	if (templateImage == NULL)
-	{
-		cout << "\nERROR: 模版图像加载失败\n" << param;
-		return 0;
-	}
-
-	param = cp.GetParameter("-s");
-	param = "Search1.jpg";
-	param = "08.png";
-	if (param == NULL)
-	{
-		cout << "ERROR: 待检索图像为空";
-		WrongUsage();
-		return -1;
-	}
-	//Load Search Image
-	IplImage* searchImage = cvLoadImage(param, -1);
-	if (searchImage == NULL)
-	{
-		cout << "\nERROR: 待检索图像加载失败" << param;
-		return 0;
-	}
-
-	param = cp.GetParameter("-l"); //get Low threshold
-	param = "10";
-	if (param != NULL)
-		lowThreshold = atoi(param);
-
-	param = cp.GetParameter("-h");
-	param = "100";
-	if (param != NULL)
-		highThreashold = atoi(param);//get high threshold
-
-	param = cp.GetParameter("-m"); // get minimum score
-	param = "0.7";
-	if (param != NULL)
-		minScore = atof(param);
-
-	param = cp.GetParameter("-g");//get greediness
-	param = "0.5";
-	if (param != NULL)
-		greediness = atof(param);
-
+	//加载模版图像
+	IplImage* templateImage = cvLoadImage("temp.jpg", -1);
+	//加载识别图像
+	IplImage* searchImage = cvLoadImage("1.jpg", -1);
 	CvSize templateSize = cvSize(templateImage->width, templateImage->height);
 	IplImage* grayTemplateImg = cvCreateImage(templateSize, IPL_DEPTH_8U, 1);
 
@@ -95,7 +38,7 @@ int main(int argc, char *argv[])
 	{
 		cvCopy(templateImage, grayTemplateImg);
 	}
-	cout << "\n 基于边缘的模板匹配程序\n";
+	cout << "\n 基于边缘的模板匹配程序\n"<<endl;
 	cout << " ------------------------------------\n";
 
 	if (!GM.CreateGeoMatchModel(grayTemplateImg, lowThreshold, highThreashold))
@@ -147,19 +90,6 @@ int main(int argc, char *argv[])
 	cvReleaseImage(&templateImage);
 	cvReleaseImage(&grayTemplateImg);
 
-	return 1;
+    return 0;
 }
-void WrongUsage()
-{
-	cout << "\n 基于边缘的模板匹配程序\n";
-	cout << " ------------------------------------\n";
-	cout << "\n程序参数:\n\n";
-	cout << "     -t 模板图像名 (image to be searched)\n\n";
-	cout << "     -h 高阈值 (High threshold for creating template model)\n\n";
-	cout << "     -l 低阈值 (Low threshold for creating template model)\n\n";
-	cout << "     -s 搜索图像名称 (image we are trying to find)\n\n";
-	cout << "     -m Minumum分数 (进行搜索所需的最低分数 [0.0 to 1.0])\n\n";
-	cout << "     -g 贪婪 (终止搜索heuistic参数 [0.0 to 1.0] )\n\n";
 
-	cout << "Example: GeoMatch -t Template.jpg -h 100 -l 10 -s Search1.jpg -m 0.7 -g 0.5 \n\n";
-}

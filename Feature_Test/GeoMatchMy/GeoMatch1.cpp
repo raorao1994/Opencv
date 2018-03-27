@@ -6,24 +6,25 @@
 //***********************************************************************
 
 #include "StdAfx.h"
-#include "GeoMatch.h"
+#include "GeoMatch1.h"
 
-GeoMatch::GeoMatch(void)
+
+GeoMatch1::GeoMatch1()
 {
-	// Initilize  no of cppodinates in model points
-	noOfCordinates = 0;  
+	// 模型点中cppodinate的初始NO
+	noOfCordinates = 0;
 	modelDefined = false;
 }
-
-int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, double minContrast)
+//创建模版匹配模版
+int GeoMatch1::CreateGeoMatchModel(const void *templateArr, double maxContrast, double minContrast)
 {
 
-	CvMat *gx = 0;		//Matrix to store X derivative
-	CvMat *gy = 0;		//Matrix to store Y derivative
-	CvMat *nmsEdges = 0;		//Matrix to store temp restult
+	CvMat *gx = 0;		//存储X导数的矩阵
+	CvMat *gy = 0;		//存储Y导数的矩阵
+	CvMat *nmsEdges = 0;//存储临时RESTOR的矩阵
 	CvSize Ssize;
 
-	// Convert IplImage to Matrix for integer operations
+	// 将IPL图像转换为整数操作的矩阵
 	CvMat srcstub, *src = (CvMat*)templateArr;
 	src = cvGetMat(src, &srcstub);
 	if (CV_MAT_TYPE(src->type) != CV_8UC1)
@@ -34,24 +35,27 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 	// set width and height
 	Ssize.width = src->width;
 	Ssize.height = src->height;
-	modelHeight = src->height;		//Save Template height
-	modelWidth = src->width;			//Save Template width
+	modelHeight = src->height;		//保存模版高度
+	modelWidth = src->width;			//保存模版宽度
 
-	noOfCordinates = 0;											//initialize	
-	cordinates = new CvPoint[modelWidth *modelHeight];		//Allocate memory for coorinates of selected points in template image
+	noOfCordinates = 0;	//初始化
+	//为模板图像中所选点的协同工作分配内存
+	cordinates = new CvPoint[modelWidth *modelHeight];
+	//为选定点的边缘大小分配内存
+	edgeMagnitude = new double[modelWidth *modelHeight];
+	//为选定点分配边缘X导数的内存
+	edgeDerivativeX = new double[modelWidth *modelHeight];
+	//为选定的点分配边缘y衍生物的内存
+	edgeDerivativeY = new double[modelWidth *modelHeight];			
 
-	edgeMagnitude = new double[modelWidth *modelHeight];		//Allocate memory for edge magnitude for selected points
-	edgeDerivativeX = new double[modelWidth *modelHeight];			//Allocate memory for edge X derivative for selected points
-	edgeDerivativeY = new double[modelWidth *modelHeight];			////Allocate memory for edge Y derivative for selected points
 
-
-	// Calculate gradient of Template
-	gx = cvCreateMat(Ssize.height, Ssize.width, CV_16SC1);		//create Matrix to store X derivative
-	gy = cvCreateMat(Ssize.height, Ssize.width, CV_16SC1);		//create Matrix to store Y derivative
-	cvSobel(src, gx, 1, 0, 3);		//gradient in X direction			
-	cvSobel(src, gy, 0, 1, 3);	//gradient in Y direction
-
-	nmsEdges = cvCreateMat(Ssize.height, Ssize.width, CV_32F);		//create Matrix to store Final nmsEdges
+	//计算模板梯度							
+	gx = cvCreateMat(Ssize.height, Ssize.width, CV_16SC1);
+	gy = cvCreateMat(Ssize.height, Ssize.width, CV_16SC1);
+	cvSobel(src, gx, 1, 0, 3);		//X方向梯度
+	cvSobel(src, gy, 0, 1, 3);	//Y方向梯度
+	//创建矩阵以存储最终的nmsEdges
+	nmsEdges = cvCreateMat(Ssize.height, Ssize.width, CV_32F);		
 	const short* _sdx;
 	const short* _sdy;
 	double fdx, fdy;
@@ -70,18 +74,19 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 		{
 			_sdx = (short*)(gx->data.ptr + gx->step*i);
 			_sdy = (short*)(gy->data.ptr + gy->step*i);
-			fdx = _sdx[j]; fdy = _sdy[j];        // read x, y derivatives
+			fdx = _sdx[j]; 
+			fdy = _sdy[j]; //读取XY导数read x, y derivatives
 
 			MagG = sqrt((float)(fdx*fdx) + (float)(fdy*fdy)); //Magnitude = Sqrt(gx^2 +gy^2)
 			direction = cvFastArctan((float)fdy, (float)fdx);	 //Direction = invtan (Gy / Gx)
 			magMat[i][j] = MagG;
 
 			if (MagG>MaxGradient)
-				// get maximum gradient value for normalizing.
-				MaxGradient = MagG; 
+				//获取归一化的最大梯度值。
+				MaxGradient = MagG;
 
 
-			// get closest angle from 0, 45, 90, 135 set
+			//从0，45，90，135得到最近的角度
 			if ((direction>0 && direction < 22.5) || (direction >157.5 && direction < 202.5) || (direction>337.5 && direction<360))
 				direction = 0;
 			else if ((direction>22.5 && direction < 67.5) || (direction >202.5 && direction <247.5))
@@ -97,9 +102,9 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 			count++;
 		}
 	}
-
-	count = 0; // init count
-	// non maximum suppression
+	//初始化计数器，
+	count = 0; 
+	//非最大抑制
 	double leftPixel, rightPixel;
 
 	for (i = 1; i < Ssize.height - 1; i++)
@@ -125,7 +130,7 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 				rightPixel = magMat[i + 1][j + 1];
 				break;
 			}
-			// compare current pixels value with adjacent pixels
+			//比较当前像素值和相邻像素
 			if ((magMat[i][j] < leftPixel) || (magMat[i][j] < rightPixel))
 				(nmsEdges->data.ptr + nmsEdges->step*i)[j] = 0;
 			else
@@ -138,7 +143,7 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 	int curX, curY;
 	int flag = 1;
 
-	//Hysterisis threshold
+	//Hysterisis 阀值
 	for (i = 1; i < Ssize.height - 1; i++)
 	{
 		for (j = 1; j < Ssize.width; j++)
@@ -150,7 +155,7 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 			MagG = sqrt(fdx*fdx + fdy*fdy); //Magnitude = Sqrt(gx^2 +gy^2)
 			DirG = cvFastArctan((float)fdy, (float)fdx);	 //Direction = tan(y/x)
 
-			////((uchar*)(imgGDir->imageData + imgGDir->widthStep*i))[j]= MagG;
+			 ////((uchar*)(imgGDir->imageData + imgGDir->widthStep*i))[j]= MagG;
 			flag = 1;
 			if (((double)((nmsEdges->data.ptr + nmsEdges->step*i))[j]) < maxContrast)
 			{
@@ -159,7 +164,7 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 
 					(nmsEdges->data.ptr + nmsEdges->step*i)[j] = 0;
 					flag = 0; // remove from edge
-							  ////((uchar*)(imgGDir->imageData + imgGDir->widthStep*i))[j]=0;
+					////((uchar*)(imgGDir->imageData + imgGDir->widthStep*i))[j]=0;
 				}
 				else
 				{   // if any of 8 neighboring pixel is not greater than max contraxt remove from edge
@@ -180,22 +185,23 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 
 			}
 
-			// save selected edge information
+			//保存选定的边缘信息
 			curX = i;	curY = j;
 			if (flag != 0)
 			{
 				if (fdx != 0 || fdy != 0)
 				{
-					RSum = RSum + curX;	CSum = CSum + curY; // Row sum and column sum for center of gravity
+					// 重心行和和列和
+					RSum = RSum + curX;	CSum = CSum + curY; 
 
 					cordinates[noOfCordinates].x = curX;
 					cordinates[noOfCordinates].y = curY;
 					edgeDerivativeX[noOfCordinates] = fdx;
 					edgeDerivativeY[noOfCordinates] = fdy;
 
-					//handle divide by zero
+					//手柄除以零handle divide by zero
 					if (MagG != 0)
-						edgeMagnitude[noOfCordinates] = 1 / MagG;  // gradient magnitude 
+						edgeMagnitude[noOfCordinates] = 1 / MagG;  //梯度级
 					else
 						edgeMagnitude[noOfCordinates] = 0;
 
@@ -205,10 +211,10 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 		}
 	}
 
-	centerOfGravity.x = RSum / noOfCordinates; // center of gravity
-	centerOfGravity.y = CSum / noOfCordinates;	// center of gravity
+	centerOfGravity.x = RSum / noOfCordinates; // 重心
+	centerOfGravity.y = CSum / noOfCordinates;	// 重心
 
-	// change coordinates to reflect center of gravity
+	//改变坐标以反映重心
 	for (int m = 0; m<noOfCordinates; m++)
 	{
 		int temp;
@@ -220,6 +226,7 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 	}
 
 	////cvSaveImage("Edges.bmp",imgGDir);
+
 	// free alocated memories
 	delete[] orients;
 	////cvReleaseImage(&imgGDir);
@@ -232,7 +239,7 @@ int GeoMatch::CreateGeoMatchModel(const void *templateArr, double maxContrast, d
 	return 1;
 }
 
-double GeoMatch::FindGeoMatchModel(const void* srcarr, double minScore, double greediness, CvPoint *resultPoint)
+double GeoMatch1::FindGeoMatchModel(const void* srcarr, double minScore, double greediness, CvPoint *resultPoint)
 {
 	CvMat *Sdx = 0, *Sdy = 0;
 	double resultScore = 0;
@@ -268,7 +275,7 @@ double GeoMatch::FindGeoMatchModel(const void* srcarr, double minScore, double g
 	cvSobel(src, Sdx, 1, 0, 3);  // find X derivatives
 	cvSobel(src, Sdy, 0, 1, 3); // find Y derivatives
 
-	// stoping criterias to search for model
+								// stoping criterias to search for model
 	double normMinScore = minScore / noOfCordinates; // precompute minumum score 
 	double normGreediness = ((1 - greediness * minScore) / (1 - greediness)) / noOfCordinates; // precompute greedniness 
 
@@ -345,7 +352,7 @@ double GeoMatch::FindGeoMatchModel(const void* srcarr, double minScore, double g
 	return resultScore;
 }
 // destructor
-GeoMatch::~GeoMatch(void)
+GeoMatch1::~GeoMatch1(void)
 {
 	delete[] cordinates;
 	delete[] edgeMagnitude;
@@ -353,23 +360,23 @@ GeoMatch::~GeoMatch(void)
 	delete[] edgeDerivativeY;
 }
 
-//allocate memory for doubel matrix
-void GeoMatch::CreateDoubleMatrix(double **&matrix, CvSize size)
+//双贝尔矩阵的内存分配
+void GeoMatch1::CreateDoubleMatrix(double **&matrix, CvSize size)
 {
 	matrix = new double*[size.height];
 	for (int iInd = 0; iInd < size.height; iInd++)
 		matrix[iInd] = new double[size.width];
 }
-// release memory
-void GeoMatch::ReleaseDoubleMatrix(double **&matrix, int size)
+//释放存储器
+void GeoMatch1::ReleaseDoubleMatrix(double **&matrix, int size)
 {
 	for (int iInd = 0; iInd < size; iInd++)
 		delete[] matrix[iInd];
 }
 
 
-// draw contours around result image
-void GeoMatch::DrawContours(IplImage* source, CvPoint COG, CvScalar color, int lineWidth)
+//绘制结果图像周围的等高线
+void GeoMatch1::DrawContours(IplImage* source, CvPoint COG, CvScalar color, int lineWidth)
 {
 	CvPoint point;
 	point.y = COG.x;
@@ -382,8 +389,8 @@ void GeoMatch::DrawContours(IplImage* source, CvPoint COG, CvScalar color, int l
 	}
 }
 
-// draw contour at template image
-void GeoMatch::DrawContours(IplImage* source, CvScalar color, int lineWidth)
+//在模板图像上绘制轮廓
+void GeoMatch1::DrawContours(IplImage* source, CvScalar color, int lineWidth)
 {
 	CvPoint point;
 	for (int i = 0; i<noOfCordinates; i++)
@@ -393,4 +400,3 @@ void GeoMatch::DrawContours(IplImage* source, CvScalar color, int lineWidth)
 		cvLine(source, point, point, color, lineWidth);
 	}
 }
-
