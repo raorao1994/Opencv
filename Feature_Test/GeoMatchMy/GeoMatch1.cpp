@@ -56,18 +56,18 @@ int GeoMatch1::CreateGeoMatchModel(const void *templateArr, double maxContrast, 
 	cvSobel(src, gy, 0, 1, 3);	//Y方向梯度
 	//创建矩阵以存储最终的nmsEdges
 	nmsEdges = cvCreateMat(Ssize.height, Ssize.width, CV_32F);		
-	const short* _sdx;
-	const short* _sdy;
+	const short* _sdx;//x剃度值
+	const short* _sdy;//y剃度值
 	double fdx, fdy;
-	double MagG, DirG;
+	double MagG, DirG;//xy剃度距离
 	double MaxGradient = -99999.99;
-	double direction;
+	double direction;//梯度角度
 	int *orients = new int[Ssize.height *Ssize.width];
 	int count = 0, i, j; // count variable;
 
 	double **magMat;
 	CreateDoubleMatrix(magMat, Ssize);
-
+	//梯度计算
 	for (i = 1; i < Ssize.height - 1; i++)
 	{
 		for (j = 1; j < Ssize.width - 1; j++)
@@ -248,12 +248,12 @@ double GeoMatch1::FindGeoMatchModel(const void* srcarr, double minScore, double 
 	double partialScore;
 	const short* _Sdx;
 	const short* _Sdy;
-	int i, j, m;			// count variables
+	int i, j, m;			//计数变量
 	double iTx, iTy, iSx, iSy;
 	double gradMag;
 	int curX, curY;
 
-	double **matGradMag;  //Gradient magnitude matrix
+	double **matGradMag;  //梯度场矩阵 
 
 	CvMat srcstub, *src = (CvMat*)srcarr;
 	src = cvGetMat(src, &srcstub);

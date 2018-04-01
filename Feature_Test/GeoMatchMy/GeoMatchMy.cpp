@@ -23,9 +23,9 @@ int main()
 	CvPoint result;
 
 	//加载模版图像
-	IplImage* templateImage = cvLoadImage("temp.jpg", -1);
+	IplImage* templateImage = cvLoadImage("0.jpg", -1);
 	//加载识别图像
-	IplImage* searchImage = cvLoadImage("1.jpg", -1);
+	IplImage* searchImage = cvLoadImage("2.jpg", -1);
 	CvSize templateSize = cvSize(templateImage->width, templateImage->height);
 	IplImage* grayTemplateImg = cvCreateImage(templateSize, IPL_DEPTH_8U, 1);
 
@@ -64,7 +64,7 @@ int main()
 	score = GM.FindGeoMatchModel(graySearchImg, minScore, greediness, &result);
 	clock_t finish_time1 = clock();
 	total_time = (double)(finish_time1 - start_time1) / CLOCKS_PER_SEC;
-
+	cout << "识别时间 = " << total_time * 1000 << "ms"<<endl;
 	if (score>minScore) // if score is atleast 0.4
 	{
 		cout << " 识别到的图像位置为： [" << result.x << ", " << result.y << "]\n Score = " << score << "\n 识别时间 = " << total_time * 1000 << "ms";

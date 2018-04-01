@@ -24,7 +24,7 @@ int main()
 	vector<KeyPoint> TempKeyPoint= GetTempleKetPoint("1.jpg", TempImg);
 	//2、加载待识别图像，获取图像边缘图像
 	Mat SrarchImg;
-	vector<KeyPoint> SrarchKeyPoint = GetTempleKetPoint("5.jpg",SrarchImg);
+	vector<KeyPoint> SrarchKeyPoint = GetTempleKetPoint("0.jpg",SrarchImg);
 	//3、根据模版识别特征点，在边缘图像中识别对应点，
 	//3.1对特征点进行描述
 	Mat imageDesc1, imageDesc2;
@@ -46,11 +46,11 @@ int main()
 	int count = 0;
 	for (int i = 0; i<matchePoints.size(); i++)
 	{
-		if (matchePoints[i].distance < 0.05)
+		if (matchePoints[i].distance < 0.02)
 			count++;
 		//cout << matchePoints[i].distance << endl;
 	}
-	cout << "特征点距离小于0.05的个数：" <<count<< endl;//294  346
+	cout << "特征点距离小于0.02的个数：" <<count<< endl;//294  346
 	//提取强特征点，获取排在前N个的最优匹配结果
 	vector<DMatch> goodMatchePoints;
 	for (int i = 0; i<matchePoints.size(); i++)
@@ -101,8 +101,9 @@ Mat GetContourImg(string path)
 	//1.1对模版图像进行边缘二值化处理
 	Mat ThresholdImg;
 	threshold(TempleImg, ThresholdImg, 100, 255, THRESH_BINARY | THRESH_OTSU);
+	return ThresholdImg;
 	//释放模版内存资源
-	//TempleImg.release();
+	TempleImg.release();
 	//1.2对二值图像进行边缘提取操作
 	vector<vector<Point>> contours;
 	findContours(ThresholdImg, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
