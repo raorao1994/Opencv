@@ -29,7 +29,7 @@ int main()
 	//getBubble(trainingImages, trainingLabels);
 	//getNoBubble(trainingImages, trainingLabels);
 	string basePath = "E:/SVN/OpenCV/trunk/Data/svm_data/train_images";
-	basePath = "E:/TablewareRecognition/TablewareRecognition/data1";
+	basePath = "E:/TablewareRecognition/Íë/µ¥Íë";
 	getClass(basePath, trainingImages, trainingLabels);
 
 	Mat(trainingImages).copyTo(trainingData);

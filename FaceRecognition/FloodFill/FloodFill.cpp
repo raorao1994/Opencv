@@ -101,7 +101,7 @@ int main()
 	system("color 2F");
 
 	//载入原图  
-	g_srcImage = imread("d:/8.jpg", 1);
+	g_srcImage = imread("E:/TablewareRecognition/碗/多碗-1/6.jpg", 1);
 
 	if (!g_srcImage.data) { printf("读取图片错误 \n"); return false; }
 

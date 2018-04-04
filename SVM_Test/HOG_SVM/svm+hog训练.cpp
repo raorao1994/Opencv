@@ -1,3 +1,5 @@
+//²Î¿¼ÎÄÏ×£ºhttp://blog.csdn.net/bleakie/article/details/53173151
+
 #include "stdafx.h"
 #include <iostream>  
 #include <fstream>  

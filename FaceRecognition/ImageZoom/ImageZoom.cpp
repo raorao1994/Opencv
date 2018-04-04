@@ -6,7 +6,7 @@
 #include <opencv2/opencv.hpp>  
 using namespace std;
 //隐藏控制台窗口  
-#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")  
+//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")  
 //第二课：图片缩放
 int main()
 {

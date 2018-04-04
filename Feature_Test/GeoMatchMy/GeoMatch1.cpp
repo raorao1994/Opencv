@@ -262,22 +262,24 @@ double GeoMatch1::FindGeoMatchModel(const void* srcarr, double minScore, double 
 		return 0;
 	}
 
-	// source image size
+	// 源图片大小
 	CvSize Ssize;
 	Ssize.width = src->width;
 	Ssize.height = src->height;
+	//创建图像以保存梯度幅值
+	CreateDoubleMatrix(matGradMag, Ssize); 
 
-	CreateDoubleMatrix(matGradMag, Ssize); // create image to save gradient magnitude  values
+	Sdx = cvCreateMat(Ssize.height, Ssize.width, CV_16SC1); // X 导数
+	Sdy = cvCreateMat(Ssize.height, Ssize.width, CV_16SC1); // y 导数
 
-	Sdx = cvCreateMat(Ssize.height, Ssize.width, CV_16SC1); // X derivatives
-	Sdy = cvCreateMat(Ssize.height, Ssize.width, CV_16SC1); // y derivatives
+	cvSobel(src, Sdx, 1, 0, 3);  // find X 梯度
+	cvSobel(src, Sdy, 0, 1, 3); // find Y 梯度
 
-	cvSobel(src, Sdx, 1, 0, 3);  // find X derivatives
-	cvSobel(src, Sdy, 0, 1, 3); // find Y derivatives
-
-								// stoping criterias to search for model
-	double normMinScore = minScore / noOfCordinates; // precompute minumum score 
-	double normGreediness = ((1 - greediness * minScore) / (1 - greediness)) / noOfCordinates; // precompute greedniness 
+	// 寻找模型的回采判据
+	// 预计最小分数
+	double normMinScore = minScore / noOfCordinates; 
+	// 预计 greedniness 
+	double normGreediness = ((1 - greediness * minScore) / (1 - greediness)) / noOfCordinates; 
 
 	for (i = 0; i < Ssize.height; i++)
 	{
@@ -302,7 +304,8 @@ double GeoMatch1::FindGeoMatchModel(const void* srcarr, double minScore, double 
 	{
 		for (j = 0; j < Ssize.width; j++)
 		{
-			partialSum = 0; // initilize partialSum measure
+			// 初始化部分和测度
+			partialSum = 0; 
 			for (m = 0; m<noOfCordinates; m++)
 			{
 				curX = i + cordinates[m].x;	// template X coordinate
@@ -316,8 +319,10 @@ double GeoMatch1::FindGeoMatchModel(const void* srcarr, double minScore, double 
 				_Sdx = (short*)(Sdx->data.ptr + Sdx->step*(curX));
 				_Sdy = (short*)(Sdy->data.ptr + Sdy->step*(curX));
 
-				iSx = _Sdx[curY]; // get curresponding  X derivative from source image
-				iSy = _Sdy[curY];// get curresponding  Y derivative from source image
+				// 从源图像获取曲线响应XY导数
+
+				iSx = _Sdx[curY]; 
+				iSy = _Sdy[curY];
 
 				if ((iSx != 0 || iSy != 0) && (iTx != 0 || iTy != 0))
 				{
@@ -328,23 +333,24 @@ double GeoMatch1::FindGeoMatchModel(const void* srcarr, double minScore, double 
 
 				sumOfCoords = m + 1;
 				partialScore = partialSum / sumOfCoords;
-				// check termination criteria
-				// if partial score score is less than the score than needed to make the required score at that position
-				// break serching at that coordinate.
+				// 检查终止准则
+				// 如果部分分数低于所需的分数，则在该位置获得所需的分数。
+				// 在那个坐标处中断连接。
 				if (partialScore < (MIN((minScore - 1) + normGreediness*sumOfCoords, normMinScore*  sumOfCoords)))
 					break;
 
 			}
 			if (partialScore > resultScore)
 			{
-				resultScore = partialScore; //  Match score
+				//  匹配分数
+				resultScore = partialScore; 
 				resultPoint->x = i;			// result coordinate X		
 				resultPoint->y = j;			// result coordinate Y
 			}
 		}
 	}
 
-	// free used resources and return score
+	// 免费使用的资源和返回分数
 	ReleaseDoubleMatrix(matGradMag, Ssize.height);
 	cvReleaseMat(&Sdx);
 	cvReleaseMat(&Sdy);
