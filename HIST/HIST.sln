@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HIST", "HIST\HIST.vcxproj", "{534A88BB-0A78-4CEF-912F-62C2AB29C36C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01直方图的计算与显示", "HIST\HIST.vcxproj", "{534A88BB-0A78-4CEF-912F-62C2AB29C36C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02用EMD度量相似性", "02用EMD度量相似性\02用EMD度量相似性.vcxproj", "{3421F9D7-EFAD-437F-A336-0908D59E0DD1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03基于像素点的反向投影", "03基于像素点的反向投影\03基于像素点的反向投影.vcxproj", "{7273A3EB-8660-4AB0-982C-0B1832B94C0C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04基于块的反向投影", "04基于块的反向投影\04基于块的反向投影.vcxproj", "{9BD55810-31F0-4589-AB39-E923912BBD9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,30 @@ Global
 		{534A88BB-0A78-4CEF-912F-62C2AB29C36C}.Release|x64.Build.0 = Release|x64
 		{534A88BB-0A78-4CEF-912F-62C2AB29C36C}.Release|x86.ActiveCfg = Release|Win32
 		{534A88BB-0A78-4CEF-912F-62C2AB29C36C}.Release|x86.Build.0 = Release|Win32
+		{3421F9D7-EFAD-437F-A336-0908D59E0DD1}.Debug|x64.ActiveCfg = Debug|x64
+		{3421F9D7-EFAD-437F-A336-0908D59E0DD1}.Debug|x64.Build.0 = Debug|x64
+		{3421F9D7-EFAD-437F-A336-0908D59E0DD1}.Debug|x86.ActiveCfg = Debug|Win32
+		{3421F9D7-EFAD-437F-A336-0908D59E0DD1}.Debug|x86.Build.0 = Debug|Win32
+		{3421F9D7-EFAD-437F-A336-0908D59E0DD1}.Release|x64.ActiveCfg = Release|x64
+		{3421F9D7-EFAD-437F-A336-0908D59E0DD1}.Release|x64.Build.0 = Release|x64
+		{3421F9D7-EFAD-437F-A336-0908D59E0DD1}.Release|x86.ActiveCfg = Release|Win32
+		{3421F9D7-EFAD-437F-A336-0908D59E0DD1}.Release|x86.Build.0 = Release|Win32
+		{7273A3EB-8660-4AB0-982C-0B1832B94C0C}.Debug|x64.ActiveCfg = Debug|x64
+		{7273A3EB-8660-4AB0-982C-0B1832B94C0C}.Debug|x64.Build.0 = Debug|x64
+		{7273A3EB-8660-4AB0-982C-0B1832B94C0C}.Debug|x86.ActiveCfg = Debug|Win32
+		{7273A3EB-8660-4AB0-982C-0B1832B94C0C}.Debug|x86.Build.0 = Debug|Win32
+		{7273A3EB-8660-4AB0-982C-0B1832B94C0C}.Release|x64.ActiveCfg = Release|x64
+		{7273A3EB-8660-4AB0-982C-0B1832B94C0C}.Release|x64.Build.0 = Release|x64
+		{7273A3EB-8660-4AB0-982C-0B1832B94C0C}.Release|x86.ActiveCfg = Release|Win32
+		{7273A3EB-8660-4AB0-982C-0B1832B94C0C}.Release|x86.Build.0 = Release|Win32
+		{9BD55810-31F0-4589-AB39-E923912BBD9A}.Debug|x64.ActiveCfg = Debug|x64
+		{9BD55810-31F0-4589-AB39-E923912BBD9A}.Debug|x64.Build.0 = Debug|x64
+		{9BD55810-31F0-4589-AB39-E923912BBD9A}.Debug|x86.ActiveCfg = Debug|Win32
+		{9BD55810-31F0-4589-AB39-E923912BBD9A}.Debug|x86.Build.0 = Debug|Win32
+		{9BD55810-31F0-4589-AB39-E923912BBD9A}.Release|x64.ActiveCfg = Release|x64
+		{9BD55810-31F0-4589-AB39-E923912BBD9A}.Release|x64.Build.0 = Release|x64
+		{9BD55810-31F0-4589-AB39-E923912BBD9A}.Release|x86.ActiveCfg = Release|Win32
+		{9BD55810-31F0-4589-AB39-E923912BBD9A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
