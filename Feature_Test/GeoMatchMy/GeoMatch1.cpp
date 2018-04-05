@@ -25,8 +25,9 @@ int GeoMatch1::CreateGeoMatchModel(const void *templateArr, double maxContrast, 
 	CvSize Ssize;
 
 	// 将IPL图像转换为整数操作的矩阵
-	CvMat srcstub, *src = (CvMat*)templateArr;
-	src = cvGetMat(src, &srcstub);
+	/*CvMat srcstub, *src = (CvMat*)templateArr;
+	src = cvGetMat(src, &srcstub);*/
+	CvMat *src = (CvMat*)templateArr;
 	if (CV_MAT_TYPE(src->type) != CV_8UC1)
 	{
 		return 0;
