@@ -10,12 +10,32 @@ using namespace cv;
 
 float throld = 5.0;//直方图识别阀值
 int h_bins = 30, s_bins = 32;
+int step = 3;//滑动步数
 
 //滑动窗口裁剪图像
 //图像都为灰度图像
 void CutImg(Mat img,Mat Temp) 
 {
+	//1、获取模版图片直方图数组
+	//1、获取图片大小
+	int tempWidth = Temp.size().width;
+	int tempHeight = Temp.size().height;
+	int width = img.size().width- tempWidth;
+	int height = img.size().height - tempHeight;
+	//滑动裁剪图像，滑动步数为step
+	for (size_t y = 0; y < height; y++)
+	{
+		for (size_t x = 0; x < width; x++)
+		{
+			//裁剪图像
+			Rect rect = Rect(x, y, tempWidth, tempHeight);
+			Mat roi(img,rect);
 
+			x += step;
+		}
+		y += step;
+	}
+	
 }
 //识别匹配度
 //判断图像是否识别成功
@@ -94,13 +114,6 @@ void GetSig(InputArray img,OutputArray sig)
 	sig2.release();
 }
 
-void show(InputArray src, OutputArray img)
-{
-	Mat _src = src.getMat();
-	img.create(_src.size(), _src.type());
-	_src.copyTo(img);
-	_src.release();
-}
 
 int main()
 {
