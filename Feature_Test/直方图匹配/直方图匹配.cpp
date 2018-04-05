@@ -47,7 +47,7 @@ bool Contrast(Mat sig, Mat hist)
 void GetSig(InputArray img,OutputArray sig)
 {
 	//1、获取HSV空间图像
-	Mat hsv = img.getMat();
+	Mat hsv;
 	//源图像->HSV格式图像
 	cvtColor(img, hsv, CV_BGR2HSV);
 	//2、创建HSV图像空间单通道图层
@@ -77,9 +77,8 @@ void GetSig(InputArray img,OutputArray sig)
 		true, // 直方图是一致的
 		false);
 	//5、生成直方图数组
-	Mat sig2=sig.getMat();
 	int numrows = h_bins*s_bins;
-	sig2 = Mat(numrows, 3, CV_32FC1);
+	Mat sig2 = Mat(numrows, 3, CV_32FC1);
 	for (int h = 0; h < h_bins; h++)
 	{
 		for (int s = 0; s < s_bins; s++)
@@ -90,12 +89,17 @@ void GetSig(InputArray img,OutputArray sig)
 			sig2.at<float>(h*s_bins + s, 2) = s;
 		}
 	}
+	sig.create(sig2.size(), sig2.type());
+	sig2.copyTo(sig);
+	sig2.release();
 }
 
 void show(InputArray src, OutputArray img)
 {
-	Mat _src=src.
-	img.create()
+	Mat _src = src.getMat();
+	img.create(_src.size(), _src.type());
+	_src.copyTo(img);
+	_src.release();
 }
 
 int main()
@@ -106,14 +110,12 @@ int main()
 	GetSig(tempSrc,sig1);
 	GetSig(srcSrc,sig2);
 
-	/*float emd = EMD(sig1, sig2, CV_DIST_L2);
+	float emd = EMD(sig1, sig2, CV_DIST_L2);
 	if (emd < throld)
 		return true;
 	else
-		return false;*/
-	Mat ii;
-	show(tempSrc,ii);
-	imshow("ii",ii);
-	system("prase");
+		return false;
+	waitKey(0);
+	system("pause");
 }
 
