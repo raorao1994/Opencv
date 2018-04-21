@@ -23,9 +23,9 @@ int main()
 	CvPoint result;
 
 	//加载模版图像
-	IplImage* templateImage = cvLoadImage("0.jpg", -1);
+	IplImage* templateImage = cvLoadImage("Template.jpg", -1);
 	//加载识别图像
-	IplImage* searchImage = cvLoadImage("2.jpg", -1);
+	IplImage* searchImage = cvLoadImage("Search1.jpg", -1);
 	CvSize templateSize = cvSize(templateImage->width, templateImage->height);
 	IplImage* grayTemplateImg = cvCreateImage(templateSize, IPL_DEPTH_8U, 1);
 

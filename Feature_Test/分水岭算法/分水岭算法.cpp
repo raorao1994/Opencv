@@ -16,7 +16,7 @@ Vec3b RandomColor(int value);  //生成随机颜色函数
 
 int main(int argc, char* argv[])
 {
-	Mat image = imread("1.jpg");    //载入RGB彩色图像  
+	Mat image = imread("E:\\TablewareRecognition\\碗\\多碗-2\\微信图片_20180416144702.jpg");    //载入RGB彩色图像  
 	imshow("原图", image);
 
 	//灰度化，滤波，Canny边缘检测  
