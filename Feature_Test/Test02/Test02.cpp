@@ -15,7 +15,7 @@ using namespace cv;
 using namespace cv::xfeatures2d;
 int main()
 {
-	Mat img = imread("D:/1.jpg");
+	Mat img = imread("D:/0.jpg");
 	//创建surf对象
 	Ptr<SURF> surf = SURF::create(800);
 	//创建关键点对象

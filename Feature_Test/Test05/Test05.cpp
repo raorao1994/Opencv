@@ -24,8 +24,8 @@ using namespace cv::flann;
 
 int main()
 {
-	Mat image01 = imread("D:/1.png");
-	Mat image02 = imread("D:/2.png");
+	Mat image01 = imread("D:/77.jpg",0);
+	Mat image02 = imread("D:/72.jpg",0);
 	Mat image1, image2;
 	image1 = image01.clone();
 	image2 = image02.clone();
@@ -35,10 +35,11 @@ int main()
 	vector<KeyPoint> keyPoint1, keyPoint2;
 	surfDetector->detect(image1, keyPoint1);
 	surfDetector->detect(image2, keyPoint2);
-
+	
 	//绘制特征点    
 	drawKeypoints(image1, keyPoint1, image1, Scalar::all(-1));
-	drawKeypoints(image2, keyPoint2, image2, Scalar::all(-1), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+	//drawKeypoints(image2, keyPoint2, image2, Scalar::all(-1), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+	drawKeypoints(image2, keyPoint2, image2, Scalar::all(-1));
 	imshow("KeyPoints of image1", image1);
 	imshow("KeyPoints of image2", image2);
 
@@ -47,7 +48,12 @@ int main()
 	Mat imageDesc1, imageDesc2;
 	SurfDescriptor->compute(image1, keyPoint1, imageDesc1);
 	SurfDescriptor->compute(image2, keyPoint2, imageDesc2);
-
+	KeyPoint a = keyPoint1[0];
+	KeyPoint b = keyPoint2[0];
+	float a1=imageDesc1.at<float>(0,0);
+	float a2 = imageDesc1.at<float>(1,0);
+	float b1 = imageDesc2.at<float>(0, 0);
+	float b2 = imageDesc2.at<float>(1, 0);
 	//归一化并显示出来描述子  
 	Mat imageDescShow1;
 	Mat imageDescShow2;
@@ -55,8 +61,8 @@ int main()
 	normalize(imageDesc2, imageDescShow2, 0, 255, CV_MINMAX);
 	convertScaleAbs(imageDescShow1, imageDescShow1);
 	convertScaleAbs(imageDescShow2, imageDescShow2);
-	imshow("描述子1", imageDescShow1);
-	imshow("描述子2", imageDescShow2);
+	//imshow("描述子1", imageDescShow1);
+	//imshow("描述子2", imageDescShow2);
 
 	//特征点匹配并显示匹配结果    
 	//BruteForceMatcher<L2<float>> matcher;    

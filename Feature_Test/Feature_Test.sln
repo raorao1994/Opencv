@@ -41,6 +41,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "直方图匹配", "直方�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "椭圆识别", "椭圆识别\椭圆识别.vcxproj", "{E4C67C3D-3737-4944-A1E5-5780CAFB7ABC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BRISK_Recognition", "BRISK_Recognition\BRISK_Recognition.vcxproj", "{057A6943-A48F-4BB4-8F80-843E58AA75C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -239,6 +241,16 @@ Global
 		{E4C67C3D-3737-4944-A1E5-5780CAFB7ABC}.Release|x64.Build.0 = Release|x64
 		{E4C67C3D-3737-4944-A1E5-5780CAFB7ABC}.Release|x86.ActiveCfg = Release|Win32
 		{E4C67C3D-3737-4944-A1E5-5780CAFB7ABC}.Release|x86.Build.0 = Release|Win32
+		{057A6943-A48F-4BB4-8F80-843E58AA75C4}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{057A6943-A48F-4BB4-8F80-843E58AA75C4}.Debug|x64.ActiveCfg = Debug|x64
+		{057A6943-A48F-4BB4-8F80-843E58AA75C4}.Debug|x64.Build.0 = Debug|x64
+		{057A6943-A48F-4BB4-8F80-843E58AA75C4}.Debug|x86.ActiveCfg = Debug|Win32
+		{057A6943-A48F-4BB4-8F80-843E58AA75C4}.Debug|x86.Build.0 = Debug|Win32
+		{057A6943-A48F-4BB4-8F80-843E58AA75C4}.Release|Any CPU.ActiveCfg = Release|Win32
+		{057A6943-A48F-4BB4-8F80-843E58AA75C4}.Release|x64.ActiveCfg = Release|x64
+		{057A6943-A48F-4BB4-8F80-843E58AA75C4}.Release|x64.Build.0 = Release|x64
+		{057A6943-A48F-4BB4-8F80-843E58AA75C4}.Release|x86.ActiveCfg = Release|Win32
+		{057A6943-A48F-4BB4-8F80-843E58AA75C4}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

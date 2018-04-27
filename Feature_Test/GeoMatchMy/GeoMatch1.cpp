@@ -158,8 +158,10 @@ int GeoMatch1::CreateGeoMatchModel(const void *templateArr, double maxContrast, 
 
 			 ////((uchar*)(imgGDir->imageData + imgGDir->widthStep*i))[j]= MagG;
 			flag = 1;
+			//判断边缘距离是否大于最大阀值
 			if (((double)((nmsEdges->data.ptr + nmsEdges->step*i))[j]) < maxContrast)
 			{
+				//判断边缘距离是否小于最小阀值
 				if (((double)((nmsEdges->data.ptr + nmsEdges->step*i))[j])< minContrast)
 				{
 
@@ -239,7 +241,12 @@ int GeoMatch1::CreateGeoMatchModel(const void *templateArr, double maxContrast, 
 	modelDefined = true;
 	return 1;
 }
-
+/*
+*srcarr 原图像
+*minScore 最小得分
+*greediness 贪婪
+*resultPoint 结果匹配点
+*/
 double GeoMatch1::FindGeoMatchModel(const void* srcarr, double minScore, double greediness, CvPoint *resultPoint)
 {
 	CvMat *Sdx = 0, *Sdy = 0;
@@ -277,11 +284,11 @@ double GeoMatch1::FindGeoMatchModel(const void* srcarr, double minScore, double 
 	cvSobel(src, Sdy, 0, 1, 3); // find Y 梯度
 
 	// 寻找模型的回采判据
-	// 预计最小分数
+	// 预计最小分数，每个点的得分情况
 	double normMinScore = minScore / noOfCordinates; 
-	// 预计 greedniness 
+	// 预计 greedniness 允许计算需要匹配的点个数（会大于noOfCordinates）
 	double normGreediness = ((1 - greediness * minScore) / (1 - greediness)) / noOfCordinates; 
-
+	//求剃度级
 	for (i = 0; i < Ssize.height; i++)
 	{
 		_Sdx = (short*)(Sdx->data.ptr + Sdx->step*(i));
@@ -291,29 +298,29 @@ double GeoMatch1::FindGeoMatchModel(const void* srcarr, double minScore, double 
 		{
 			iSx = _Sdx[j];  // X derivative of Source image
 			iSy = _Sdy[j];  // Y derivative of Source image
-
 			gradMag = sqrt((iSx*iSx) + (iSy*iSy)); //Magnitude = Sqrt(dx^2 +dy^2)
-
 			if (gradMag != 0) // hande divide by zero
 				matGradMag[i][j] = 1 / gradMag;   // 1/Sqrt(dx^2 +dy^2)
 			else
 				matGradMag[i][j] = 0;
-
 		}
 	}
+
+
 	for (i = 0; i < Ssize.height; i++)
 	{
 		for (j = 0; j < Ssize.width; j++)
 		{
 			// 初始化部分和测度
 			partialSum = 0; 
+			//以ij像素点为中心点，获取模版图像所有图像的关键点
 			for (m = 0; m<noOfCordinates; m++)
 			{
 				curX = i + cordinates[m].x;	// template X coordinate
 				curY = j + cordinates[m].y; // template Y coordinate
 				iTx = edgeDerivativeX[m];	// template X derivative
 				iTy = edgeDerivativeY[m];    // template Y derivative
-
+				//判断点坐标是否超出模版图像
 				if (curX<0 || curY<0 || curX>Ssize.height - 1 || curY>Ssize.width - 1)
 					continue;
 
@@ -328,8 +335,8 @@ double GeoMatch1::FindGeoMatchModel(const void* srcarr, double minScore, double 
 				if ((iSx != 0 || iSy != 0) && (iTx != 0 || iTy != 0))
 				{
 					//partial Sum  = Sum of(((Source X derivative* Template X drivative) + Source Y derivative * Template Y derivative)) / Edge magnitude of(Template)* edge magnitude of(Source))
-					partialSum = partialSum + ((iSx*iTx) + (iSy*iTy))*(edgeMagnitude[m] * matGradMag[curX][curY]);
-
+					partialSum = partialSum + ((iSx*iTx) +
+						(iSy*iTy))*(edgeMagnitude[m] * matGradMag[curX][curY]);
 				}
 
 				sumOfCoords = m + 1;
@@ -337,10 +344,12 @@ double GeoMatch1::FindGeoMatchModel(const void* srcarr, double minScore, double 
 				// 检查终止准则
 				// 如果部分分数低于所需的分数，则在该位置获得所需的分数。
 				// 在那个坐标处中断连接。
-				if (partialScore < (MIN((minScore - 1) + normGreediness*sumOfCoords, normMinScore*  sumOfCoords)))
+				if (partialScore < (MIN((minScore - 1) + normGreediness*sumOfCoords, 
+					normMinScore*  sumOfCoords)))
 					break;
 
 			}
+			//判断得分是否大于最大的分
 			if (partialScore > resultScore)
 			{
 				//  匹配分数
