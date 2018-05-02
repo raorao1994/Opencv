@@ -64,8 +64,8 @@ void BRISK1()
 void BRISK2()
 {
 	//Load Image       
-	Mat c_src1 = imread("d:/phone.jpg");
-	Mat src1 = imread("d:/phone.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	Mat c_src1 = imread("d:/phone.bmp");
+	Mat src1 = imread("d:/phone.bmp", CV_LOAD_IMAGE_GRAYSCALE);
 
 	Ptr<BRISK> detector= BRISK::create();
 	vector<KeyPoint> kp1, kp2;
@@ -98,8 +98,24 @@ void BRISK2()
 		//drawKeypoints(frameGray, kpf, frame, Scalar::all(-1), drawmode);
 		detector->compute(frame, kpf, desf);
 		matcher.match(des1, desf, matches);
-		imshow("frame", frame);
-		drawMatches(src1, kp1, frame, kpf, matches, img_match);
+		//imshow("frame", frame);
+		cout << "特征点sort排序后距离：" << endl;
+		sort(matches.begin(), matches.end()); //按距离从小到大排序  
+		//提取强特征点  
+		//获取排在前N个的最优匹配结果  
+		vector<DMatch> goodMatchePoints;
+		/*for (int i = 0; i<20; i++)
+		{
+			goodMatchePoints.push_back(matches[i]);
+		}*/
+		for (int i = 0; i<matches.size(); i++)
+		{
+			if(matches[i].distance<60)
+				goodMatchePoints.push_back(matches[i]);
+		}
+		cout << goodMatchePoints[0].distance << endl;
+		//drawMatches(src1, kp1, frame, kpf, matches, img_match);
+		drawMatches(src1, kp1, frame, kpf, goodMatchePoints, img_match);
 		imshow("match", img_match);
 		waitKey(2);
 	}
