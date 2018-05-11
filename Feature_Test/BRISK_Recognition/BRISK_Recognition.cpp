@@ -16,8 +16,8 @@ void BRISK2();
 
 int main()
 {
-	//BRISK1();
-	BRISK2();
+	BRISK1();
+	//BRISK2();
 	system("pause");
     return 0;
 }
@@ -25,10 +25,10 @@ int main()
 void BRISK1()
 {
 	//Load Image     
-	Mat c_src1 = imread("D:/1.png");
-	Mat c_src2 = imread("D:/2.png");
-	Mat src1 = imread("D:/1.png", CV_LOAD_IMAGE_GRAYSCALE);
-	Mat src2 = imread("D:/2.png", CV_LOAD_IMAGE_GRAYSCALE);
+	Mat c_src1 = imread("D:/6.jpg");
+	Mat c_src2 = imread("D:/7.jpg");
+	Mat src1 = imread("D:/6.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	Mat src2 = imread("D:/7.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 	if (!src1.data || !src2.data)
 	{
 		std::cout << " --(!) Error reading images " << std::endl; ;
@@ -64,8 +64,8 @@ void BRISK1()
 void BRISK2()
 {
 	//Load Image       
-	Mat c_src1 = imread("d:/phone.bmp");
-	Mat src1 = imread("d:/phone.bmp", CV_LOAD_IMAGE_GRAYSCALE);
+	Mat c_src1 = imread("d:/me.bmp");
+	Mat src1 = imread("d:/me.bmp", CV_LOAD_IMAGE_GRAYSCALE);
 
 	Ptr<BRISK> detector= BRISK::create();
 	vector<KeyPoint> kp1, kp2;
@@ -99,23 +99,23 @@ void BRISK2()
 		detector->compute(frame, kpf, desf);
 		matcher.match(des1, desf, matches);
 		//imshow("frame", frame);
-		cout << "特征点sort排序后距离：" << endl;
-		sort(matches.begin(), matches.end()); //按距离从小到大排序  
+		//cout << "特征点sort排序后距离：" << endl;
+		//sort(matches.begin(), matches.end()); //按距离从小到大排序  
 		//提取强特征点  
 		//获取排在前N个的最优匹配结果  
-		vector<DMatch> goodMatchePoints;
+		//vector<DMatch> goodMatchePoints;
 		/*for (int i = 0; i<20; i++)
 		{
 			goodMatchePoints.push_back(matches[i]);
 		}*/
-		for (int i = 0; i<matches.size(); i++)
+		/*for (int i = 0; i<matches.size(); i++)
 		{
 			if(matches[i].distance<60)
 				goodMatchePoints.push_back(matches[i]);
 		}
-		cout << goodMatchePoints[0].distance << endl;
+		cout << goodMatchePoints[0].distance << endl;*/
 		//drawMatches(src1, kp1, frame, kpf, matches, img_match);
-		drawMatches(src1, kp1, frame, kpf, goodMatchePoints, img_match);
+		drawMatches(src1, kp1, frame, kpf, matches, img_match);
 		imshow("match", img_match);
 		waitKey(2);
 	}
